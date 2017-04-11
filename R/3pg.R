@@ -53,7 +53,7 @@ run_3pg <- function(config, climate = NULL, output = NULL){
   #} else {
   #    print("Number of configuration and climate files does not make sense.")
   #}
-  return(output_list)
+  return(data.frame(output_list))
 }
 
 ##main <- function(argv){ # DMG need work - basically just needs to be writend so that multiple config files can be written.
