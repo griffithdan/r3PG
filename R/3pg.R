@@ -40,12 +40,12 @@ run_3pg <- function(config, climate = NULL, output = NULL){
    # climate <- "test_data/Test_EO_in.txt"
    # output <- "test_tmp.txt"
 
-
-
-  #if(length(climate) == length(config) & length(config) == length(output)){
-      for(cfg in 1:length(config)){
-        output_list[[basename(config[cfg])]] <- instance3PG(config[cfg], climate[cfg], output[cfg])
-      }
+    output_list <- instance3PG(config, climate, output)
+    
+   #if(length(climate) == length(config) & length(config) == length(output)){
+      ###for(cfg in 1:length(config)){
+      ###  output_list[[basename(config[cfg])]] <- instance3PG(config[cfg], climate[cfg], output[cfg])
+      ###}
   #} else if(length(config) > 1 & length(climate) == 1){
   #    for(cfg in 1:length(config)){
   #      output[basename(config[cfg])] <- instance3PG(config[cfg], climate)

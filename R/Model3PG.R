@@ -64,11 +64,16 @@
 ##}
 
 instance3PG <- function(config, climate = NULL, output = NULL){
-  config <- load_config(config)
+  
+  
+  if(!is.list(config)){
+    config <- load_config(config)
+  }
+
 
   if(is.null(climate)){
     climate <- read.table(config$IO$input, sep = "\t", header = TRUE) #
-  } else {
+  } else if(!is.data.frame(climate)){
     climate <- read.table(climate, sep = "\t", header = TRUE) #
   }
 
