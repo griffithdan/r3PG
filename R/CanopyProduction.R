@@ -8,6 +8,33 @@
 ##from utils import get_days_in_month
 ##from constants import molPAR_MJ, gDM_mol
 
+# DMG ADD IN A CO2 modifier - not sure why this was not in the python model
+    
+#Pa_ppm <- function(x){(x/101.325)*1000}
+ppm_Pa <- function(x){(x/1000)*101.325}
+      
+calc_modifier_co2 <- function(alpha, CO2, Temperature){
+      a <- 0.8 # PAR absorbance
+      alpha <- alpha # intrinsic quantum yield
+      CiCa <- 0.8
+
+      
+      CO2 <- ppm_Pa(CO2)
+      P_i <- CO2 * CiCa
+      Q10 <- 0.57
+      s25 <- 2600
+      pO2 <- 21000
+      s <- function(x){s25 * Q10 ^ ((x - 25)/ 10)}  
+      I <- c(250:251) # incident PAR
+      
+      #A <- a * alpha * I * ((P_i - pO2 / (2 * s(Temperature))) / (P_i + 2 * pO2 / (2 * s(Temperature))))
+      A1 <- (a * alpha * I[1] * ((P_i - pO2 / (2 * s(Temperature))) / (P_i + 2 * pO2 / (2 * s(Temperature)))))
+      A2 <- (a * alpha * I[2] * ((P_i - pO2 / (2 * s(Temperature))) / (P_i + 2 * pO2 / (2 * s(Temperature)))))
+      effective_LUE <- abs(A2-A1)
+
+    return(effective_LUE)
+}    
+
 calc_modifier_temp <- function(T_av, T_min, T_max, T_opt){
     if(T_av <= T_min | T_av >= T_max){
         res = 0
