@@ -27,7 +27,7 @@
 ##  return(model)
 ##}
 
-run_3pg <- function(config, climate = NULL, output = NULL){
+run_3pg <- function(config, climate = NULL, output = NULL, grass = FALSE){
     # read the control file
 
     ##    print '%s is not a valid control file.' % fpath_control
@@ -40,7 +40,7 @@ run_3pg <- function(config, climate = NULL, output = NULL){
    # climate <- "test_data/Test_EO_in.txt"
    # output <- "test_tmp.txt"
 
-    output_list <- instance3PG(config, climate, output)
+    output_list <- instance3PG(config, climate, output, grass)
     
    #if(length(climate) == length(config) & length(config) == length(output)){
       ###for(cfg in 1:length(config)){

@@ -10,7 +10,7 @@
 
 # DMG ADD IN A CO2 modifier - not sure why this was not in the python model
     
-#Pa_ppm <- function(x){(x/101.325)*1000}
+Pa_ppm <- function(x){(x/101.325)*1000}
 ppm_Pa <- function(x){(x/1000)*101.325}
       
 calc_modifier_co2 <- function(alpha, CO2, Temperature){
@@ -33,7 +33,32 @@ calc_modifier_co2 <- function(alpha, CO2, Temperature){
       effective_LUE <- abs(A2-A1)
 
     return(effective_LUE)
-}    
+}
+
+back_calc_co2 <- function(effective_LUE, Temperature){
+      a <- 0.8 # PAR absorbance
+      alpha <- 0.085 # intrinsic quantum yield
+      CiCa <- 0.8
+
+      
+      Q10 <- 0.57
+      s25 <- 2600
+      pO2 <- 21000
+      s <- function(x){s25 * Q10 ^ ((x - 25)/ 10)}  
+      I <- c(250:251) # incident PAR
+      
+      
+      LE <- effective_LUE / (a * alpha)
+      A <- pO2 / (2 * s(Temperature))
+      B <- 2 * pO2 / (2 * s(Temperature))
+      
+      #x * LE + B * LE + A = x 
+      CO2 = (-B * LE - A) / (LE - 1)
+            CO2 <- Pa_ppm(CO2)/CiCa
+            
+    return(CO2)
+}  
+######################################
 
 calc_modifier_temp <- function(T_av, T_min, T_max, T_opt){
     if(T_av <= T_min | T_av >= T_max){
@@ -116,7 +141,7 @@ calc_canopy_production <- function(solar_rad, month, light_interception, canopy_
     return(canopy_production_list)
 }
 
-canopy_production <- function(T_av, VPD, ASW, frost_days, stand_age, LAI, solar_rad, month, CounterforShrub, config){
+canopy_production <- function(T_av, Ca, VPD, ASW, frost_days, stand_age, LAI, solar_rad, month, CounterforShrub, config, grass){ # DMG add Ca
 
     config_canopy = config$CanopyProduction
     config_shrub = config$ShrubEffect
@@ -159,7 +184,7 @@ canopy_production <- function(T_av, VPD, ASW, frost_days, stand_age, LAI, solar_
     KL = as.numeric(config_shrub$KL)
     Lsx = as.numeric(config_shrub$Lsx)
 
-    modifier_temperature = calc_modifier_temp(T_av, T_min, T_max, T_opt)
+    modifier_temperature = calc_modifier_temp(T_av, T_min, T_max, T_opt) 
     modifier_VPD = calc_modifier_VPD(VPD, CoeffCond)
     modifier_soilwater = calc_modifier_soilwater(ASW, MaxASW, SWconst, SWpower)
     modifier_nutrition = calc_modifier_soilnutrition(FR, fN0)
@@ -173,7 +198,11 @@ canopy_production <- function(T_av, VPD, ASW, frost_days, stand_age, LAI, solar_
 
     canopy_conductance = calc_canopy_conductance(T_av, LAI, modifier_physiology, TK2, TK3, MaxCond, LAIgcx)
 
-    canopy_production_list = calc_canopy_production(solar_rad, month, light_interception, canopy_cover, modifier_physiology, modifier_nutrition, modifier_temperature, modifier_frost, alpha, y)
+    #DMG/
+      alphaPASS <- ifelse(test = grass == TRUE, yes = calc_modifier_co2(alpha = alpha, CO2 = Ca, Temperature = T_av), no = alpha)
+    #/DMG
+
+    canopy_production_list = calc_canopy_production(solar_rad, month, light_interception, canopy_cover, modifier_physiology, modifier_nutrition, modifier_temperature, modifier_frost, alphaPASS, y)
       PAR <- canopy_production_list$PAR
       APAR <- canopy_production_list$APAR
       APARu <- canopy_production_list$APARu
