@@ -63,7 +63,7 @@
 ##        self.keeper.shutdown()
 ##}
 
-instance3PG <- function(config, climate = NULL, output = NULL, grass = FALSE){
+instance3PG <- function(config, climate = NULL, output = NULL){
   
   
   if(!is.list(config)){
@@ -187,7 +187,7 @@ instance3PG <- function(config, climate = NULL, output = NULL, grass = FALSE){
                     CounterforShrub = NA
 
                     # Canopy Production Module
-                      canopy_production_list <- canopy_production(T_av, CaMonthly, VPD, ASW, frost_days, stand_age, LAI, solar_rad, month + 1, CounterforShrub, config, grass)
+                      canopy_production_list <- canopy_production(T_av, CaMonthly, VPD, ASW, frost_days, stand_age, LAI, solar_rad, month + 1, CounterforShrub, config)
                         PAR <- canopy_production_list$PAR
                         APAR <- canopy_production_list$APAR
                         APARu <- canopy_production_list$APARu

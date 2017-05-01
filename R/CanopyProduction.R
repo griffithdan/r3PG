@@ -10,54 +10,54 @@
 
 # DMG ADD IN A CO2 modifier - not sure why this was not in the python model
     
-Pa_ppm <- function(x){(x/101.325)*1000}
-ppm_Pa <- function(x){(x/1000)*101.325}
+#Pa_ppm <- function(x){(x/101.325)*1000}
+#ppm_Pa <- function(x){(x/1000)*101.325}
       
-calc_modifier_co2 <- function(alpha, CO2, Temperature){
-      a <- 0.8 # PAR absorbance
-      alpha <- alpha # intrinsic quantum yield
-      CiCa <- 0.8
+#calc_modifier_co2 <- function(alpha, CO2, Temperature){
+#      a <- 0.8 # PAR absorbance
+#      alpha <- alpha # intrinsic quantum yield
+#      CiCa <- 0.8
+##
+#      
+#      CO2 <- ppm_Pa(CO2)
+#      P_i <- CO2 * CiCa
+#      Q10 <- 0.57
+#      s25 <- 2600
+#      pO2 <- 21000
+#      s <- function(x){s25 * Q10 ^ ((x - 25)/ 10)}  
+#      I <- c(250:251) # incident PAR
+      
+#      #A <- a * alpha * I * ((P_i - pO2 / (2 * s(Temperature))) / (P_i + 2 * pO2 / (2 * s(Temperature))))
+#      A1 <- (a * alpha * I[1] * ((P_i - pO2 / (2 * s(Temperature))) / (P_i + 2 * pO2 / (2 * s(Temperature)))))
+#      A2 <- (a * alpha * I[2] * ((P_i - pO2 / (2 * s(Temperature))) / (P_i + 2 * pO2 / (2 * s(Temperature)))))
+#      effective_LUE <- abs(A2-A1)
+#
+#    return(effective_LUE)
+#}
 
-      
-      CO2 <- ppm_Pa(CO2)
-      P_i <- CO2 * CiCa
-      Q10 <- 0.57
-      s25 <- 2600
-      pO2 <- 21000
-      s <- function(x){s25 * Q10 ^ ((x - 25)/ 10)}  
-      I <- c(250:251) # incident PAR
-      
-      #A <- a * alpha * I * ((P_i - pO2 / (2 * s(Temperature))) / (P_i + 2 * pO2 / (2 * s(Temperature))))
-      A1 <- (a * alpha * I[1] * ((P_i - pO2 / (2 * s(Temperature))) / (P_i + 2 * pO2 / (2 * s(Temperature)))))
-      A2 <- (a * alpha * I[2] * ((P_i - pO2 / (2 * s(Temperature))) / (P_i + 2 * pO2 / (2 * s(Temperature)))))
-      effective_LUE <- abs(A2-A1)
-
-    return(effective_LUE)
-}
-
-back_calc_co2 <- function(effective_LUE, Temperature){
-      a <- 0.8 # PAR absorbance
-      alpha <- 0.085 # intrinsic quantum yield
-      CiCa <- 0.8
-
-      
-      Q10 <- 0.57
-      s25 <- 2600
-      pO2 <- 21000
-      s <- function(x){s25 * Q10 ^ ((x - 25)/ 10)}  
-      I <- c(250:251) # incident PAR
+#back_calc_co2 <- function(effective_LUE, Temperature){
+#      a <- 0.8 # PAR absorbance
+#      alpha <- 0.085 # intrinsic quantum yield
+#      CiCa <- 0.8
+#
+ #     
+#      Q10 <- 0.57
+#      s25 <- 2600
+#      pO2 <- 21000
+#      s <- function(x){s25 * Q10 ^ ((x - 25)/ 10)}  
+#      I <- c(250:251) # incident PAR
       
       
-      LE <- effective_LUE / (a * alpha)
-      A <- pO2 / (2 * s(Temperature))
-      B <- 2 * pO2 / (2 * s(Temperature))
+#      LE <- effective_LUE / (a * alpha)
+#      A <- pO2 / (2 * s(Temperature))
+#      B <- 2 * pO2 / (2 * s(Temperature))
       
       #x * LE + B * LE + A = x 
-      CO2 = (-B * LE - A) / (LE - 1)
-            CO2 <- Pa_ppm(CO2)/CiCa
+#      CO2 = (-B * LE - A) / (LE - 1)
+#            CO2 <- Pa_ppm(CO2)/CiCa
             
-    return(CO2)
-}  
+#    return(CO2)
+#}  
 ######################################
 
 calc_modifier_temp <- function(T_av, T_min, T_max, T_opt){
@@ -199,10 +199,10 @@ canopy_production <- function(T_av, Ca, VPD, ASW, frost_days, stand_age, LAI, so
     canopy_conductance = calc_canopy_conductance(T_av, LAI, modifier_physiology, TK2, TK3, MaxCond, LAIgcx)
 
     #DMG/
-      alphaPASS <- ifelse(test = grass == TRUE, yes = calc_modifier_co2(alpha = alpha, CO2 = Ca, Temperature = T_av), no = alpha)
+      #alphaPASS <- ifelse(test = grass == TRUE, yes = calc_modifier_co2(alpha = alpha, CO2 = Ca, Temperature = T_av), no = alpha)
     #/DMG
 
-    canopy_production_list = calc_canopy_production(solar_rad, month, light_interception, canopy_cover, modifier_physiology, modifier_nutrition, modifier_temperature, modifier_frost, alphaPASS, y)
+    canopy_production_list = calc_canopy_production(solar_rad, month, light_interception, canopy_cover, modifier_physiology, modifier_nutrition, modifier_temperature, modifier_frost, y)
       PAR <- canopy_production_list$PAR
       APAR <- canopy_production_list$APAR
       APARu <- canopy_production_list$APARu
