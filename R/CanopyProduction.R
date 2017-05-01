@@ -202,7 +202,7 @@ canopy_production <- function(T_av, Ca, VPD, ASW, frost_days, stand_age, LAI, so
       #alphaPASS <- ifelse(test = grass == TRUE, yes = calc_modifier_co2(alpha = alpha, CO2 = Ca, Temperature = T_av), no = alpha)
     #/DMG
 
-    canopy_production_list = calc_canopy_production(solar_rad, month, light_interception, canopy_cover, modifier_physiology, modifier_nutrition, modifier_temperature, modifier_frost, y)
+    canopy_production_list = calc_canopy_production(solar_rad, month, light_interception, canopy_cover, modifier_physiology, modifier_nutrition, modifier_temperature, modifier_frost, alpha, y)
       PAR <- canopy_production_list$PAR
       APAR <- canopy_production_list$APAR
       APARu <- canopy_production_list$APARu
