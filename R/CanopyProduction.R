@@ -10,8 +10,8 @@
 
 # DMG ADD IN A CO2 modifier - not sure why this was not in the python model
     
-#Pa_ppm <- function(x){(x/101.325)*1000}
-#ppm_Pa <- function(x){(x/1000)*101.325}
+Pa_ppm <- function(x){(x/101.325)*1000}
+ppm_Pa <- function(x){(x/1000)*101.325}
       
 calc_modifier_co2 <- function(alpha, CO2, Temperature){
       a <- 0.8 # PAR absorbance
