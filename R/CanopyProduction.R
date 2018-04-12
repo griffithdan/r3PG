@@ -1,18 +1,12 @@
-##"""
-##Canopy Production Module
-##Included for the version160926
-##by YK, on 9/26/2016
-##"""
-##from __future__ import division
-##from math import exp
-##from utils import get_days_in_month
-##from constants import molPAR_MJ, gDM_mol
+#' Calculations for growth modifiers and productivity
+#'
+#' Internal functions for canopy productivity from light use and growth 
+#'   modifiers for soil, vpd, etc.
 
-# DMG ADD IN A CO2 modifier - not sure why this was not in the python model
-    
 Pa_ppm <- function(x){(x/101.325)*1000}
 ppm_Pa <- function(x){(x/1000)*101.325}
       
+# DMG proposed co2 modifier, not yet added to growth function
 calc_modifier_co2 <- function(alpha, CO2, Temperature){
       a <- 0.8 # PAR absorbance
       alpha <- alpha # intrinsic quantum yield

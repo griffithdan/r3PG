@@ -1,49 +1,11 @@
-##from __future__ import division
-##from math import exp, log, pi
-
-##"""
-##Stem Mortality Module
-##"""
-
-# def doThinning(n As Integer, table As Variant)
-# function for manually thinning
-# not implemented yet
-
-
-# def doDefoliation(n As Integer, table As Variant)
-# function for defoliation
-# not implemented yet
-
-
-
-# Update tree and stand data at the end of this time period,
-# taking mortality, thinning or defoliation into account
-
-##"""
-##    # Perform any thinning or defoliation events for this time period
-##    if thinEventNo <= nThinning:
-##        doThinning(thinEventNo, Thinning)
-##    if defoltnEventNo <= nDefoliation:
-##        doDefoliation(defoltnEventNo, Defoliation)
-##"""
+#' Internal calculations for mortality
+#'
+#' Determines the number of stems to remove to ensure the
+#'   self-thinning rule is satisfied. It applies the Newton-Rhapson method
+#'   to solve for N to an accuracy of 1 stem or less. To change this,
+#'   change the value of "accuracy".#
 
 getMortality <- function(oldN, oldW, mS, wSx1000, thinPower){
-   # """
-   #Input:
-   #     oldN, Double
-  #      oldW, Double
-  #  Output:
-  #      mortality rate, Double
-  #  Description:
-  #      This function determines the number of stems to remove to ensure the
-  #      self-thinning rule is satisfied. It applies the Newton-Rhapson method
-  #      to solve for N to an accuracy of 1 stem or less. To change this,
-  #      change the value of "accuracy".#
-#
- #       This was the old mortality function:
-#          getMortality = oldN - 1000 * (wSx1000 * oldN / oldW / 1000) ^ (1 / thinPower)
- #       which has been superceded by the following ...
-  #  """
     accuracy = 1 / 1000
     n = oldN / 1000
     x1 = 1000 * mS * oldW / oldN

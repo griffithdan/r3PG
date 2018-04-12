@@ -1,27 +1,11 @@
-#"""
-#Water Balance Module
-#Included for the version160926
-#by YK, on 9/26/2016
-#"""
-#from __future__ import division
-#from constants import Qa, Qb
-#from utils import get_days_in_month
-
-calc_transpiration_PM <- function(Q, VPD, h, gBL, gC){
-    #"""
-    #Input:
-    #    Q, Double
-    #    VPD, Double
-    #    h, Double
-    #    gBL, Double
-    #    gC, Double
-    #Output:
-    #    canopy_transpiration, Double
-    #Description:
-    #    use Penman-Monteith equation for computing canopy transpiration
+#' Internal calculations Water Balance
+#'
+#' Use Penman-Monteith equation for computing canopy transpiration
     #    in calcuation, the result is kg / (m^2 day),
     #    which is conmverted to mm/day in the output
-    #"""
+
+calc_transpiration_PM <- function(Q, VPD, h, gBL, gC){
+
     # The following are constants in the PM formula (Landsberg & Gower, 1997)
     e20 = 2.2                   # rate of change of saturated VP with T at 20C
     rhoAir = 1.2                # density of air, kg/m3

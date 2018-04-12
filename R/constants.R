@@ -1,7 +1,6 @@
-# -*- coding: utf-8 -*-
-
-#"""conversion factors
-#"""
+#' Internal constants
+#'
+#' Internal constants
 
 gDM_mol = 24         # conversion of mol to gDM
 molPAR_MJ = 2.3      # conversion of MJ to PAR

@@ -1,6 +1,6 @@
-##from __future__ import division
-##from math import exp, sin, cos, sqrt, acos
-##from math import pi
+#' Internal utilities
+#'
+#' Internal utility functions, e.g., getting day length, frost days, etc.
 
 get_VPD <- function(T_min, T_max){
     #"""calculate VPD from min and max temperature

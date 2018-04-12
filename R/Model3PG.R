@@ -1,67 +1,16 @@
-## """
-## Included for the version160926
-## by YK, on 9/26/2016
-## """
-## from __future__ import division
-
-## import re
-## from math import pi
-
-## import numpy as np
-
-## from framework import Model, BookKepper
-## from utils import get_stand_age, get_day_length
-
-## from CanopyProduction import canopy_production
-## from BiomassPartition import biomass_partition
-## from WaterBalance import water_balance
-## from StemMortality import stem_mortality, calc_factors_age
-
-##mapper <- list("stand_age" = "stand_age",
-##               "lai" = "LAI",
-##               "mai" = "MAI",
-##               "basarea" = "BasArea",
-##               "height" = "Height",
-##               "d13ctissue" = "D13CTissue",
-##               "modifier_physiology" = "modifier_physiology",
-##               "npp" = "NPP",
-##               "asw" = "ASW",
-##               "transp" = "transp",
-##               "loss_water" = "loss_water",
-##               "standvol" = "StandVol",
-##               "stemno" = "StemNo",
-##               "par" = "PAR",
-##               "intercippm" = "InterCiPPM",
-##               "wf" = "WF",
-##               "ws" = "WS",
-##               "wr" = "WR",
-##               "avstemmass" = "AvStemMass",
-##               "delwf" = "delWF",
-##               "delwr" = "delWR",
-##               "delws" = "delWS",
-##               "d18oleaf" = "d18Oleaf",
-##               "d18ocell" = "d18Ocell",
-##               "d18ocell_peclet" = "d18Ocell_peclet",
-##               "avdbh" = "avDBH")
-
-#class Model3PG(Model):
-#    def __init__(self, fpath_setting):
-#        super(Model3PG, self).__init__(fpath_setting)
-#        self.initialize()
-
-##initialize <- function(self){ # DMG need work
-##        fpath_input = self.config.IO.input
-##        fpath_output = self.config.IO.output
-##
-##        self.data = np.loadtxt(fpath_input, skiprows=1)
-##        self.keeper = BookKepper(fpath_output)
-##        self.keeper.initialize(self.config.Output)
-##}
-
-##teardown <- function(self){ # DMG need work
-##        self.data = None
-##        self.keeper.shutdown()
-##}
+#' Primary internal model code
+#'
+#' Accepts climate data, species characteristics, and site configuration 
+#'   information and returns model outputs
+#'
+#' @param config Either the path to a 3PG configuration file OR a list object
+#'   with the appropriate structure (see examples/read function).
+#' @param climate Either the path to a 3PG climate file OR a data.frame object
+#'   with the appropriate structure (see examples/read function).
+#' @param output Optional file path for output.
+#' @return A data.frame with model results.
+#'
+#' @seealso \link[r3PG]{load_config}.
 
 instance3PG <- function(config, climate = NULL, output = NULL){
   
@@ -69,7 +18,6 @@ instance3PG <- function(config, climate = NULL, output = NULL){
   if(!is.list(config)){
     config <- load_config(config)
   }
-
 
   if(is.null(climate)){
     climate <- read.table(config$IO$input, sep = "\t", header = TRUE) #
@@ -156,7 +104,6 @@ instance3PG <- function(config, climate = NULL, output = NULL){
                     out_var_names <- names(config$Output[config$Output == 1])
                     output_vars <- matrix(data = sapply(X = out_var_names, FUN = dynGet), nrow = 1, ncol = length(out_var_names), dimnames = list(NULL,out_var_names))
 
-
                 } else {
                     #print(paste('month: ', month + 1, " and metMonth:", metMonth + 1, sep = ""))
                     config_site = config$SiteCharacteristics
@@ -167,8 +114,6 @@ instance3PG <- function(config, climate = NULL, output = NULL){
                     if(month >= 12){month = 1}
                     # if metMonth > 12 * mYears:
                     #     metMonth = 1
-
-                    # DMG index fix, try adding +1 to everthing
 
                     # T_max = self.data[metMonth, 0] #CJS note: does not need Tmax met. data: VPD and SRAD are already in inputs
                     # T_min = self.data[metMonth, 1] #CJS note: does not need Tmax met. data: VPD and SRAD are already in inputs
@@ -264,9 +209,3 @@ instance3PG <- function(config, climate = NULL, output = NULL){
     return(output_vars)
 }
 
-##if __name__ == '__main__':
-##    fpath_test = r'../test/Test_config.cfg'
-##model = Model3PG(fpath_test)
-##    print model.data
-##
-##    model.run()
