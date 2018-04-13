@@ -6,13 +6,13 @@
 #' @param config Either the path to a 3PG configuration file OR a list object
 #'   with the appropriate structure (see examples/read function).
 #' @param climate Either the path to a 3PG climate file OR a data.frame object
-#'   with the appropriate structure (see examples/read function).
+#'   with the appropriate structure (see examples/read function). 
 #' @param output Optional file path for output.
 #' @return A data.frame with model results.
 #'
 #' @seealso \link[r3PG]{load_config}.
 
-instance3PG <- function(config, climate = NULL, output = NULL){
+instance3PG <- function(config, climate = NULL, output = FALSE){
   
   
   if(!is.list(config)){
@@ -25,28 +25,16 @@ instance3PG <- function(config, climate = NULL, output = NULL){
     climate <- read.table(climate, sep = "\t", header = TRUE) #
   }
 
-    config_time = config$TimeRange
-    config_site = config$SiteCharacteristics
-    config_initial = config$InitialState
-    config_stem = config$StemMortality
-
-    lat = as.numeric(config_site$lat)
-    EndYear = as.integer(config_time$EndYear) # there was a space before ENDYEAR in the python script... check that this was not purposely "turned off"????
-    InitialYear = as.integer(config_time$InitialYear)
-    InitialMonth = as.integer(config_time$InitialMonth)
-    YearPlanted = as.integer(config_time$YearPlanted)
-    MonthPlanted = as.integer(config_time$MonthPlanted)
-    EndAge = as.integer(config_time$EndAge)
-
+  list2env(config$TimeRange, envir = environment())
+  list2env(config$SiteCharacteristics, envir = environment())
+  list2env(config$InitialState, envir = environment())
+  list2env(config$StemMortality, envir = environment())
+  
       nYears = EndYear - InitialYear + 1
 
     # Assign initial state of stand
       stand_age_list <- get_stand_age(lat, InitialYear, InitialMonth, YearPlanted, MonthPlanted, EndAge)
-        stand_age <- stand_age_list$stand_age
-        StartAge <- stand_age_list$StartAge
-        InitialYear <- stand_age_list$InitialYear
-        InitialMonth <- stand_age_list$InitialMonth
-        MonthPlanted <- stand_age_list$MonthPlanted
+        list2env(stand_age_list, envir = environment())
 
         # do annual calculation
         metMonth = InitialMonth
@@ -54,32 +42,22 @@ instance3PG <- function(config, climate = NULL, output = NULL){
             print(paste('year ', year, sep = ""))
 
             # do monthly calculations
-            month = InitialMonth #+ 1 # DMG added because R starts with 1 index, instead of 0
+            month = InitialMonth 
             for(month_counter in 1:12){
-                if(year == 0 & month == InitialMonth){#+ 1){ # DMG added because R starts with 1 index, instead of 0
-                    WS = as.numeric(config_initial$InitialWS)
-                    WF = as.numeric(config_initial$InitialWF)
-                    WR = as.numeric(config_initial$InitialWR)
-                    StemNo = as.numeric(config_initial$InitialStocking)
-                    ASW = as.numeric(config_initial$InitialASW)
+                if(year == 0 & month == InitialMonth){
+                    WS = InitialWS
+                    WF = InitialWF
+                    WR = InitialWR
+                    StemNo = InitialStocking
+                    ASW = InitialASW
+                    
                     TotalLitter = 0
                     # thinEventNo = 1
                     # defoltnEventNo = 1
                     irrig = 0 # TODO
 
-                    SLA0 = as.numeric(config_stem$SLA0)
-                    SLA1 = as.numeric(config_stem$SLA1)
-                    tSLA = as.numeric(config_stem$tSLA)
-                    fracBB0 = as.numeric(config_stem$fracBB0)
-                    fracBB1 = as.numeric(config_stem$fracBB1)
-                    tBB = as.numeric(config_stem$tBB)
-                    StemConst = as.numeric(config_stem$StemConst)
-                    StemPower = as.numeric(config_stem$StemPower)
-                    Density = as.numeric(config_stem$Density)
-
                     factors_age_list <- calc_factors_age(stand_age, SLA0, SLA1, tSLA, fracBB0, fracBB1, tBB)
-                      SLA <- factors_age_list$SLA
-                      fracBB <- factors_age_list$fracBB
+                      list2env(factors_age_list, envir = environment())
 
                     AvStemMass = WS * 1000 / StemNo                 # kg/tree
                     avDBH = (AvStemMass / StemConst) ^ (1 / StemPower)
@@ -106,10 +84,7 @@ instance3PG <- function(config, climate = NULL, output = NULL){
 
                 } else {
                     #print(paste('month: ', month + 1, " and metMonth:", metMonth + 1, sep = ""))
-                    config_site = config$SiteCharacteristics
 
-                    lat = as.numeric(config_site$lat)
-                    elev = as.numeric(config_site$elev)
                     # assign meteorological data at this month
                     if(month >= 12){month = 1}
                     # if metMonth > 12 * mYears:
@@ -133,59 +108,20 @@ instance3PG <- function(config, climate = NULL, output = NULL){
 
                     # Canopy Production Module
                       canopy_production_list <- canopy_production(T_av, CaMonthly, VPD, ASW, frost_days, stand_age, LAI, solar_rad, month + 1, CounterforShrub, config)
-                        PAR <- canopy_production_list$PAR
-                        APAR <- canopy_production_list$APAR
-                        APARu <- canopy_production_list$APARu
-                        GPPmolc <- canopy_production_list$GPPmolc
-                        GPPdm <- canopy_production_list$GPPdm
-                        NPP <- canopy_production_list$NPP
-                        modifiers <- canopy_production_list$modifiers
-                        LAIShrub <- canopy_production_list$LAIShrub
-                        CounterforShrub <- canopy_production_list$CounterforShrub
-                        canopy_conductance <- canopy_production_list$canopy_conductance
+                        list2env(canopy_production_list, envir = environment())
 
           					# Water Balance Module
                       water_balance_list <- water_balance(solar_rad, VPD, day_length, LAI, rain, irrig, month + 1, ASW, canopy_conductance, LAIShrub, config)
-                        transpall <- water_balance_list$transpall
-                        transp <- water_balance_list$transp
-                        transpshrub <- water_balance_list$transpshrub
-                        loss_water <- water_balance_list$loss_water
-                        ASW <- water_balance_list$ASW
-                        monthlyIrrig <- water_balance_list$monthlyIrrig
-                        canopy_transpiration_sec <- water_balance_list$canopy_transpiration_sec
+                        list2env(water_balance_list, envir = environment())
 
                     # Biomass Partion Module
                       modifier_physiology = tail(modifiers, 1)
                       biomass_partition_list = biomass_partition(T_av, LAI, elev, CaMonthly, D13Catm, WF, WR, WS, TotalLitter, NPP, GPPmolc, stand_age, month + 1, avDBH, modifier_physiology, VPD, d18Osrc, canopy_conductance, canopy_transpiration_sec, config)
-                        WF <- biomass_partition_list$WF
-                        WR <- biomass_partition_list$WR
-                        WS <- biomass_partition_list$WS
-                        TotalW <- biomass_partition_list$TotalW
-                        TotalLitter <- biomass_partition_list$TotalLitter
-                        D13CTissue <- biomass_partition_list$D13CTissue
-                        InterCiPPM <- biomass_partition_list$InterCiPPM
-                        delWF <- biomass_partition_list$delWF
-                        delWR <- biomass_partition_list$delWR
-                        delWS <- biomass_partition_list$delWS
-                        d18Oleaf <- biomass_partition_list$d18Oleaf
-                        d18Ocell <- biomass_partition_list$d18Ocell
-                        d18Ocell_peclet <- biomass_partition_list$d18Ocell_peclet
+                        list2env(biomass_partition_list, envir = environment())
 
                     # Stem Mortality Module
                       stem_mortality_list <- stem_mortality(WF, WR, WS, StemNo, delStemNo, stand_age, config)
-                        stand_age <- stem_mortality_list$stand_age
-                        LAI <- stem_mortality_list$LAI
-                        MAI <- stem_mortality_list$MAI
-                        avDBH <- stem_mortality_list$avDBH
-                        BasArea <- stem_mortality_list$BasArea
-                        Height <- stem_mortality_list$Height
-                        StemNo <- stem_mortality_list$StemNo
-                        delStemNo <- stem_mortality_list$delStemNo
-                        StandVol <- stem_mortality_list$StandVol
-                        WF <- stem_mortality_list$WF
-                        WR <- stem_mortality_list$WR
-                        WS <- stem_mortality_list$WS
-                        AvStemMass <- stem_mortality_list$AvStemMass
+                        list2env(stem_mortality_list, envir = environment())
 
                         #print(paste("LAI: ", get("LAI"), sep = ""))
                         out_var_names <- names(config$Output[config$Output == 1])
@@ -200,7 +136,8 @@ instance3PG <- function(config, climate = NULL, output = NULL){
             }
         }
 
-        if(is.null(output)){
+        if(output == FALSE){
+        } else if(is.null(output) | output == "" | output == "config"){
           write.table(x = output_vars, file = config$IO$output, sep = "\t", row.names = FALSE, col.names = TRUE)
         } else {
           write.table(x = output_vars, file = output, sep = "\t", row.names = FALSE, col.names = TRUE)

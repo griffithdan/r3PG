@@ -12,7 +12,7 @@
 data(example.config)
 }
 \description{
-Data from ...
+Data for setting up Ponderosa Pine at Kew OR isotope site
 }
 \examples{
 data(example.config)

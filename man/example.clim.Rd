@@ -12,7 +12,7 @@
 data(example.clim)
 }
 \description{
-Data from ...
+Cliamte data for Kew OR isotope site
 }
 \examples{
 data(example.clim)

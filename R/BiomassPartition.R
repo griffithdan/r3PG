@@ -46,55 +46,28 @@ update_endofmonth_biomass <- function(WF, WR, WS, TotalLitter, delWF, delWR, del
 
 biomass_partition <- function(T_av, LAI, elev, CaMonthly, D13Catm, WF, WR, WS, TotalLitter, NPP, GPPmolc, stand_age, month, avDBH, modifier_physiology, VPD, d18Osrc, canopy_conductance, canopy_transpiration_sec, config){
 
-    config_canopy = config$CanopyProduction
-    config_bio = config$BiomassPartition
-
-    m0 = as.numeric(config_bio$m0)
-    pRx = as.numeric(config_bio$pRx)
-    pRn = as.numeric(config_bio$pRn)
-
-    pFS20 = as.numeric(config_bio$pFS20)
-    pFS2 = as.numeric(config_bio$pFS2)
-    pfsPower = log(pFS20 / pFS2) / log(20 / 2)
-    pfsConst = pFS2 / (2 ^ pfsPower)
-
-    FR = as.numeric(config_canopy$FR)
-
-    gammaFx = as.numeric(config_bio$gammaFx)
-    gammaF0 = as.numeric(config_bio$gammaF0)
-    tgammaF = as.numeric(config_bio$tgammaF)
-    Rttover = as.numeric(config_bio$Rttover)
-
-    RGcGW = as.numeric(config_bio$RGcGW)
-    D13CTissueDif = as.numeric(config_bio$D13CTissueDif)
-    aFracDiffu = as.numeric(config_bio$aFracDiffu)
-    bFracRubi = as.numeric(config_bio$bFracRubi)
+  list2env(config$CanopyProduction, envir = environment())
+  list2env(config$BiomassPartition, envir = environment())
+      
+  pfsPower = log(pFS20 / pFS2) / log(20 / 2)
+  pfsConst = pFS2 / (2 ^ pfsPower)
 
     biomass_partition_list = calc_biomass_partition(NPP, avDBH, modifier_physiology, m0, FR, pfsConst, pfsPower, pRx, pRn)
-      delWF <- biomass_partition_list$delWF
-      delWR <- biomass_partition_list$delWR
-      delWS <- biomass_partition_list$delWS
+      list2env(biomass_partition_list, envir = environment())
 
     litter_and_rootturnover_list = calc_litter_and_rootturnover(WF, WR, stand_age, gammaFx, gammaF0, tgammaF, Rttover)
-      delLitter <- litter_and_rootturnover_list$delLitter
-      delRoots <- litter_and_rootturnover_list$delRoots
+      list2env(litter_and_rootturnover_list, envir = environment())
 
     endofmonth_biomass_list = update_endofmonth_biomass(WF, WR, WS, TotalLitter, delWF, delWR, delWS, delLitter, delRoots)
-      WF <- endofmonth_biomass_list$WF
-      WR <- endofmonth_biomass_list$WR
-      WS <- endofmonth_biomass_list$WS
-      TotalW <- endofmonth_biomass_list$TotalW
-      TotalLitter <- endofmonth_biomass_list$TotalLitter
+      list2env(endofmonth_biomass_list, envir = environment())
 
     d13c_list = calc_d13c(T_av, CaMonthly, D13Catm, elev, GPPmolc, month, canopy_conductance, RGcGW, D13CTissueDif, aFracDiffu, bFracRubi)
-      D13CTissue <- d13c_list$D13CTissue
-      InterCiPPM <- d13c_list$InterCiPPM
+      list2env(d13c_list, envir = environment())
 
     d18O_list = d18O(T_av, VPD, d18Osrc, canopy_transpiration_sec)
-      d18Oleaf <- d18O_list$d18Oleaf
-      d18Ocell <- d18O_list$d18Ocell
-      d18Ocell_peclet <- d18O_list$d18Ocell_peclet
+      list2env(d18O_list, envir = environment())
 
     biomass_partition_list <- list(WF = WF, WR = WR, WS = WS, TotalW = TotalW, TotalLitter = TotalLitter, D13CTissue = D13CTissue, InterCiPPM = InterCiPPM, delWF = delWF, delWR = delWR, delWS = delWS, d18Oleaf = d18Oleaf, d18Ocell = d18Ocell, d18Ocell_peclet = d18Ocell_peclet)
-      return(biomass_partition_list)
+  
+  return(biomass_partition_list)
 }

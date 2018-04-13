@@ -14,5 +14,11 @@
 
 load_config <- function(fpath_cfg){
     res <- read.ini(fpath_cfg)
+    IO <- res$IO
+    res$IO <- NULL
+    res <- rapply(object = res, 
+                  f = as.numeric, 
+                  how = "list")
+    res$IO <- IO
     return(res)
 }

@@ -36,6 +36,6 @@ plot(example.clim[,1:3])
 ```{r example, fig.align = 'center', fig.width = 3, fig.height = 3}
 output <- run_3pg(config = example.config, climate = example.clim, output = "test.txt")
 head(output)
-#plot(output$d13ctissue ~ 1:nrow(output))
+plot(output$D13CTissue ~ 1)
 ```
 

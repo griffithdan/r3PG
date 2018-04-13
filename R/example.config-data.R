@@ -1,6 +1,6 @@
 #' Example config
 #'
-#' Data from ...
+#' Data for setting up Ponderosa Pine at Kew OR isotope site
 #'
 #' @docType data
 #'

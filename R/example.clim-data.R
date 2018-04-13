@@ -1,6 +1,6 @@
 #' Example climate
 #'
-#' Data from ...
+#' Cliamte data for Kew OR isotope site
 #'
 #' @docType data
 #'
