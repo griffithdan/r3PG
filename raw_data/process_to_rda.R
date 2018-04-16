@@ -11,6 +11,7 @@
 
 # Example climate file
   example.clim <- read.csv("raw_data/default.csv")
+  example.clim <- example.clim[,c("Tav","VPD","Rain","Solar.rad","Frost.Days","Ca","D13Catm","d18O","Year","Month")]
   save(example.clim, file = "data/example.clim.RData")
 
 # Read species data
@@ -89,8 +90,52 @@
   data("example.clim")
     head(example.clim, 12)
       
+  clim.Argentina <- read.csv("raw_data/clim-Argentina.csv") 
+  clim.BritishColumbia <- read.csv("raw_data/clim-BritishColumbia.csv") 
+  clim.NorthCarolina <- read.csv("raw_data/clim-NorthCarolina.csv") 
+  clim.WesternOR <- read.csv("raw_data/clim-western-OR.csv") 
     
+      tmp <- clim.Argentina
+      tmp$Tav <- (tmp$Tmax - tmp$Tmin) / 2
+      tmp$VPD <- get_VPD(T_max = tmp$Tmax, T_min = tmp$Tmin) 
+      tmp$Ca <- tail(example.clim$Ca, 12)
+      tmp$D13Catm <- tail(example.clim$D13Catm, 12)
+      tmp$d18O <- tail(example.clim$d18O, 12)  
+      tmp$Tmax <- tmp$Tmin <- NULL
+      clim.Argentina <- tmp
     
+      tmp <- clim.BritishColumbia
+      tmp$Tav <- (tmp$Tmax - tmp$Tmin) / 2
+      tmp$VPD <- get_VPD(T_max = tmp$Tmax, T_min = tmp$Tmin) 
+      tmp$Ca <- tail(example.clim$Ca, 12)
+      tmp$D13Catm <- tail(example.clim$D13Catm, 12)
+      tmp$d18O <- tail(example.clim$d18O, 12)  
+      tmp$Tmax <- tmp$Tmin <- NULL
+      clim.BritishColumbia <- tmp    
+        
+      tmp <- clim.NorthCarolina
+      tmp$Tav <- (tmp$Tmax - tmp$Tmin) / 2
+      tmp$VPD <- get_VPD(T_max = tmp$Tmax, T_min = tmp$Tmin) 
+      tmp$Ca <- tail(example.clim$Ca, 12)
+      tmp$D13Catm <- tail(example.clim$D13Catm, 12)
+      tmp$d18O <- tail(example.clim$d18O, 12)  
+      tmp$Tmax <- tmp$Tmin <- NULL
+      clim.NorthCarolina <- tmp
     
+      tmp <- clim.WesternOR
+      tmp$Tav <- (tmp$Tmax - tmp$Tmin) / 2
+      tmp$VPD <- get_VPD(T_max = tmp$Tmax, T_min = tmp$Tmin) 
+      tmp$Ca <- tail(example.clim$Ca, 12)
+      tmp$D13Catm <- tail(example.clim$D13Catm, 12)
+      tmp$d18O <- tail(example.clim$d18O, 12)  
+      tmp$Tmax <- tmp$Tmin <- NULL
+      clim.WesternOR <- tmp    
     
+      
+      
+      
+      
+      
+      
+      
     

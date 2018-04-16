@@ -7,7 +7,11 @@
 #'   with the appropriate structure (see examples/read function).
 #' @param climate Either the path to a 3PG climate file OR a data.frame object
 #'   with the appropriate structure (see examples/read function). If specified,
-#'   these data take priori over an input specified in the config file.
+#'   these data take priori over an input specified in the config file. The data
+#'   should be sorted in order from first month to final month. Using Tmin and 
+#'   Tmax you can calculated VPD with get_VPD() and frost_days with frost_days().
+#'   Required columns are Tav, VPD, Rain, Solar.rad, Frost.Days, Ca, D13Catm, 
+#'   and d18O.
 #' @param output Optional file path for output. If FALSE, then no output is 
 #'   given. If either "config" or "" or NULL, output is written to file 
 #'   according to the configuration file.

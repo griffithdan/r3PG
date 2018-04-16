@@ -25,13 +25,25 @@ instance3PG <- function(config, climate = NULL, output = FALSE, python_indexing 
   } else if(!is.data.frame(climate)){
     climate <- read.table(climate, sep = "\t", header = TRUE) #
   }
+  
+  # Process climate columns
+    climate <- data.frame(
+      T_av = climate[,grep(pattern = "^(Tav|T_av|Tmean|T_mean|Tmn|T_mn)$", x = colnames(climate))],
+      VPD = climate[,grep(pattern = "^(VPD|vpd)$", x = colnames(climate))],
+      rain = climate[,grep(pattern = "^(Rain|rain)$", x = colnames(climate))],
+      solar_rad = climate[,grep(pattern = "^(Solar.rad|Solar_rad|SolarRad)$", x = colnames(climate))],
+      frost_days = as.integer(climate[,grep(pattern = "^(Frost.Days|Frost_Days|FrostDays)$", x = colnames(climate))]),
+      CaMonthly = climate[,grep(pattern = "^(CaMonthly|Ca|CO2)$", x = colnames(climate))],
+      D13Catm = climate[,grep(pattern = "^(D13Catm|D13C|d13C)$", x = colnames(climate))],
+      d18Osrc = climate[,grep(pattern = "^(d18O|d18Osrc|d18O|D18O)$", x = colnames(climate))]
+    )
 
   list2env(config$TimeRange, envir = environment())
   list2env(config$SiteCharacteristics, envir = environment())
   list2env(config$InitialState, envir = environment())
   list2env(config$StemMortality, envir = environment())
   
-      nYears = EndYear - InitialYear + 1
+    nYears = EndYear - InitialYear + 1
 
     # Assign initial state of stand
       stand_age_list <- get_stand_age(lat, InitialYear, InitialMonth, YearPlanted, MonthPlanted, EndAge)
@@ -89,22 +101,16 @@ instance3PG <- function(config, climate = NULL, output = FALSE, python_indexing 
 
                     # assign meteorological data at this month
                     if(month > 12){month = 1}
-                    # if metMonth > 12 * mYears:
-                    #     metMonth = 1
 
-                    # T_max = self.data[metMonth, 0] #CJS note: does not need Tmax met. data: VPD and SRAD are already in inputs
-                    # T_min = self.data[metMonth, 1] #CJS note: does not need Tmax met. data: VPD and SRAD are already in inputs
-                    T_av = climate[metMonth, 3]
-                    # VPD = get_VPD(T_min, T_max) #CJS note: does not need VPD met. data: VPD data are already in inputs
-                    VPD = climate[metMonth, 4]
-                    rain = climate[metMonth, 5]
-                    solar_rad = climate[metMonth, 6]
-                    # rain_days = int(self.data[metMonth, 7])
-                    day_length = get_day_length(lat, month)
-                    frost_days = as.integer(climate[metMonth, 8])
-                    CaMonthly = climate[metMonth, 9]
-                    D13Catm = climate[metMonth, 10]
-                    d18Osrc = climate[metMonth, 11]
+                      T_av = climate[metMonth, "T_av"]
+                      VPD = climate[metMonth, "VPD"]
+                      rain = climate[metMonth, "rain"]
+                      solar_rad = climate[metMonth, "solar_rad"]
+                      frost_days = as.integer(climate[metMonth, "frost_days"])
+                      CaMonthly = climate[metMonth, "CaMonthly"]
+                      D13Catm = climate[metMonth, "D13Catm"]
+                      d18Osrc = climate[metMonth, "d18Osrc"]
+                      day_length = get_day_length(lat, month)
 
                     CounterforShrub = NA
 
