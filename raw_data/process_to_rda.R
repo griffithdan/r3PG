@@ -131,7 +131,10 @@
       tmp$Tmax <- tmp$Tmin <- NULL
       clim.WesternOR <- tmp    
     
-      
+  save(clim.Argentina, file = "data/clim.Argentina.RData")      
+  save(clim.BritishColumbia, file = "data/clim.BritishColumbia.RData")      
+  save(clim.NorthCarolina, file = "data/clim.NorthCarolina.RData")      
+  save(clim.WesternOR, file = "data/clim.WesternOR.RData")        
       
       
       

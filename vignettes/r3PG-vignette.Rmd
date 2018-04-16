@@ -33,9 +33,48 @@ plot(example.clim[,1:3])
 
 ## Run example dataset
 
-```{r example, fig.align = 'center', fig.width = 3, fig.height = 3}
-output <- run_3pg(config = example.config, climate = example.clim, output = "test.txt")
+```{r example, echo=FALSE, fig.align = 'center', fig.width = 3, fig.height = 3}
+output <- run_3pg(config = example.config, 
+                  climate = example.clim, 
+                  output = FALSE, 
+                  python_indexing = FALSE)
 head(output)
-plot(output$D13CTissue ~ 1)
+plot(output$D13CTissue ~ 1, type = "l") # add 1.5 to get gfrom wood to cellulose
 ```
+
+## Compare species
+
+```{r species, echo=FALSE, fig.align = 'center', fig.width = 3, fig.height = 3}
+data("cfg.Pseudotsuga.menziesii")
+data("cfg.Pinus.ponderosa")
+pipo.run <- run_3pg(config = cfg.Pinus.ponderosa, 
+                    climate = example.clim, 
+                    output = FALSE, 
+                    python_indexing = FALSE)
+doug.run <- run_3pg(config = cfg.Pseudotsuga.menziesii, 
+                    climate = example.clim, 
+                    output = FALSE, 
+                    python_indexing = FALSE)
+plot(pipo.run$D13CTissue+1.5 ~ 1, type = "l", col = "dodgerblue")
+lines(doug.run$D13CTissue+1.5 ~ 1, type = "l", col = "darkorange")
+```
+
+## Compare species at sites
+
+```{r species, echo=FALSE, fig.align = 'center', fig.width = 3, fig.height = 3}
+data(clim.Argent)
+data("cfg.Pinus.ponderosa")
+pipo.run <- run_3pg(config = cfg.Pinus.ponderosa, 
+                    climate = example.clim, 
+                    output = FALSE, 
+                    python_indexing = FALSE)
+doug.run <- run_3pg(config = cfg.Pseudotsuga.menziesii, 
+                    climate = example.clim, 
+                    output = FALSE, 
+                    python_indexing = FALSE)
+plot(pipo.run$D13CTissue+1.5 ~ 1, type = "l", col = "dodgerblue")
+lines(doug.run$D13CTissue+1.5 ~ 1, type = "l", col = "darkorange")
+```
+
+
 
