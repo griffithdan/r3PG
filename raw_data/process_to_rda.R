@@ -2,6 +2,11 @@
 
 # Example config file
   example.config <- load_config("raw_data/default.cfg")
+  example.config$TimeRange$StartAge
+  example.config$TimeRange$InitialMonth <- 1
+  example.config$TimeRange$EndMonth <- 12
+  example.config$TimeRange$MonthPlanted <- 1
+  
   save(example.config, file = "data/example.config.RData")
 
 # Example climate file
@@ -79,9 +84,10 @@
   save(cfg.Pinus.taeda, file = "data/cfg.Pinus.taeda.RData")      
   save(cfg.Pseudotsuga.menziesii, file = "data/cfg.Pseudotsuga.menziesii.RData")      
       
-      
-      
-      
+# Read climate data      
+  
+  data("example.clim")
+    head(example.clim, 12)
       
     
     

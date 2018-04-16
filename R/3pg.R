@@ -11,6 +11,8 @@
 #' @param output Optional file path for output. If FALSE, then no output is 
 #'   given. If either "config" or "" or NULL, output is written to file 
 #'   according to the configuration file.
+#' @param python_indexing If TRUE, month indices are done in python style for 
+#'   compatibily. If FALSE then January is 1, not 0. Defaults to FALSE.   
 #' @return A data.frame with model results.
 #' @export
 #' @examples
@@ -25,12 +27,15 @@
 #   LastModified: YIK update on 8/2/16: PC
 ############################################################################
 
-run_3pg <- function(config, climate = NULL, output = FALSE){
+run_3pg <- function(config, 
+                    climate = NULL, 
+                    output = FALSE, 
+                    python_indexing = FALSE){
 
   # TODO add code to check the config file
   
   output_list <- list()
-  output_list <- instance3PG(config, climate, output)
+  output_list <- instance3PG(config, climate, output, python_indexing)
   
   # TODO potentially add code for running multiple times. For R users, likely 
   #  better to leave this out.

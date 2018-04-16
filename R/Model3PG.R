@@ -8,12 +8,13 @@
 #' @param climate Either the path to a 3PG climate file OR a data.frame object
 #'   with the appropriate structure (see examples/read function). 
 #' @param output Optional file path for output.
+#' @param python_indexing If TRUE, month indices are done in python style for 
+#'   compatibily. If FALSE then January is 1, not 0. Defaults to FALSE.
 #' @return A data.frame with model results.
 #'
 #' @seealso \link[r3PG]{load_config}.
 
-instance3PG <- function(config, climate = NULL, output = FALSE){
-  
+instance3PG <- function(config, climate = NULL, output = FALSE, python_indexing = FALSE){
   
   if(!is.list(config)){
     config <- load_config(config)
@@ -37,6 +38,7 @@ instance3PG <- function(config, climate = NULL, output = FALSE){
         list2env(stand_age_list, envir = environment())
 
         # do annual calculation
+        if(python_indexing == TRUE){InitialMonth <- InitialMonth + 1; EndMonth <- EndMonth + 1; MonthPlanted <- MonthPlanted + 1}
         metMonth = InitialMonth
         for(year in seq(from = StartAge, to = EndAge, by = 1)){
             print(paste('year ', year, sep = ""))
@@ -44,7 +46,7 @@ instance3PG <- function(config, climate = NULL, output = FALSE){
             # do monthly calculations
             month = InitialMonth 
             for(month_counter in 1:12){
-                if(year == 0 & month == InitialMonth){
+                if(year == StartAge & month == InitialMonth){
                     WS = InitialWS
                     WF = InitialWF
                     WR = InitialWR
@@ -86,37 +88,37 @@ instance3PG <- function(config, climate = NULL, output = FALSE){
                     #print(paste('month: ', month + 1, " and metMonth:", metMonth + 1, sep = ""))
 
                     # assign meteorological data at this month
-                    if(month >= 12){month = 1}
+                    if(month > 12){month = 1}
                     # if metMonth > 12 * mYears:
                     #     metMonth = 1
 
                     # T_max = self.data[metMonth, 0] #CJS note: does not need Tmax met. data: VPD and SRAD are already in inputs
                     # T_min = self.data[metMonth, 1] #CJS note: does not need Tmax met. data: VPD and SRAD are already in inputs
-                    T_av = climate[metMonth + 1, 3]
+                    T_av = climate[metMonth, 3]
                     # VPD = get_VPD(T_min, T_max) #CJS note: does not need VPD met. data: VPD data are already in inputs
-                    VPD = climate[metMonth + 1, 4]
-                    rain = climate[metMonth + 1, 5]
-                    solar_rad = climate[metMonth + 1, 6]
+                    VPD = climate[metMonth, 4]
+                    rain = climate[metMonth, 5]
+                    solar_rad = climate[metMonth, 6]
                     # rain_days = int(self.data[metMonth, 7])
-                    day_length = get_day_length(lat, month + 1)
-                    frost_days = as.integer(climate[metMonth + 1, 8])
-                    CaMonthly = climate[metMonth + 1, 9]
-                    D13Catm = climate[metMonth + 1, 10]
-                    d18Osrc = climate[metMonth + 1, 11]
+                    day_length = get_day_length(lat, month)
+                    frost_days = as.integer(climate[metMonth, 8])
+                    CaMonthly = climate[metMonth, 9]
+                    D13Catm = climate[metMonth, 10]
+                    d18Osrc = climate[metMonth, 11]
 
                     CounterforShrub = NA
 
                     # Canopy Production Module
-                      canopy_production_list <- canopy_production(T_av, CaMonthly, VPD, ASW, frost_days, stand_age, LAI, solar_rad, month + 1, CounterforShrub, config)
+                      canopy_production_list <- canopy_production(T_av, CaMonthly, VPD, ASW, frost_days, stand_age, LAI, solar_rad, month, CounterforShrub, config)
                         list2env(canopy_production_list, envir = environment())
 
           					# Water Balance Module
-                      water_balance_list <- water_balance(solar_rad, VPD, day_length, LAI, rain, irrig, month + 1, ASW, canopy_conductance, LAIShrub, config)
+                      water_balance_list <- water_balance(solar_rad, VPD, day_length, LAI, rain, irrig, month, ASW, canopy_conductance, LAIShrub, config)
                         list2env(water_balance_list, envir = environment())
 
                     # Biomass Partion Module
                       modifier_physiology = tail(modifiers, 1)
-                      biomass_partition_list = biomass_partition(T_av, LAI, elev, CaMonthly, D13Catm, WF, WR, WS, TotalLitter, NPP, GPPmolc, stand_age, month + 1, avDBH, modifier_physiology, VPD, d18Osrc, canopy_conductance, canopy_transpiration_sec, config)
+                      biomass_partition_list = biomass_partition(T_av, LAI, elev, CaMonthly, D13Catm, WF, WR, WS, TotalLitter, NPP, GPPmolc, stand_age, month, avDBH, modifier_physiology, VPD, d18Osrc, canopy_conductance, canopy_transpiration_sec, config)
                         list2env(biomass_partition_list, envir = environment())
 
                     # Stem Mortality Module
