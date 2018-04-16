@@ -101,6 +101,7 @@ instance3PG <- function(config, climate = NULL, output = FALSE, python_indexing 
 
                     # assign meteorological data at this month
                     if(month > 12){month = 1}
+                    if(metMonth > nrow(climate)){metMonth = 1}
 
                       T_av = climate[metMonth, "T_av"]
                       VPD = climate[metMonth, "VPD"]

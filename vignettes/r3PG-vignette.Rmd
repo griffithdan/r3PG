@@ -62,18 +62,25 @@ lines(doug.run$D13CTissue+1.5 ~ 1, type = "l", col = "darkorange")
 ## Compare species at sites
 
 ```{r species, echo=FALSE, fig.align = 'center', fig.width = 3, fig.height = 3}
-data(clim.Argent)
-data("cfg.Pinus.ponderosa")
-pipo.run <- run_3pg(config = cfg.Pinus.ponderosa, 
-                    climate = example.clim, 
+data("clim.Argentina")
+data("clim.BritishColumbia")
+data("clim.NorthCarolina")
+data("clim.WesternOR")
+
+cfg.Pinus.ponderosa$TimeRange
+  cfg.Pinus.ponderosa$TimeRange$EndAge <- 25
+  cfg.Pinus.ponderosa$TimeRange$EndYear <- 1975
+
+pipo.Arg.run <- run_3pg(config = cfg.Pinus.ponderosa, 
+                    climate = clim.Argentina, 
                     output = FALSE, 
                     python_indexing = FALSE)
-doug.run <- run_3pg(config = cfg.Pseudotsuga.menziesii, 
-                    climate = example.clim, 
+pipo.WOR.run <- run_3pg(config = cfg.Pinus.ponderosa, 
+                    climate = clim.WesternOR, 
                     output = FALSE, 
                     python_indexing = FALSE)
-plot(pipo.run$D13CTissue+1.5 ~ 1, type = "l", col = "dodgerblue")
-lines(doug.run$D13CTissue+1.5 ~ 1, type = "l", col = "darkorange")
+plot(pipo.Arg.run$D13CTissue+1.5 ~ 1, type = "l", col = "dodgerblue")
+lines(pipo.WOR.run$D13CTissue+1.5 ~ 1, type = "l", col = "darkorange")
 ```
 
 
