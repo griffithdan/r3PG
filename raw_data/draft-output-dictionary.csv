@@ -1,0 +1,69 @@
+Description,Output name,3-PG name,Units
+Site and management attributes,,,
+Name of site given on site data sheet,Site name,siteName,
+Fertility rating,Fert. rating,FR,
+Minimum available soil water (for supplemental irrigation),Min ASW,minASW,mm
+Applied irrigation,Annual irrigation,Irrig,mm/ha/yr
+Stand attributes,,,
+Current stand age ,Stand age,StandAge,years
+Stand stocking,Stocking,StemNo,trees/ha
+Stand basal area,Basal area,BasArea,m2/ha
+"Stand volume, main stem excluding bark",Stand volume,StandVol,m3/ha
+Stand-based mean DBH,Mean DBH,avDBH,cm
+Current mean annual stem volume increment,MAI,MAI,m3/ha/yr
+Peak MAI of stand to the current stand age,Peak MAI,MAIx,m3/ha/yr
+Stand age at which MAI peaked,Age at peak MAI,ageMAIx,yr
+Current canopy LAI (mean annual value if output is annual),LAI,LAI,
+Peak canopy LAI up to the current stand age,Max LAI,LAIx,
+Stand age at which LAI peaked,Age at max LAI,ageLAIx,yr
+Fraction of ground area covered by canopy,Fract. canopy cover,CanCover,
+Biomass pools and canopy attributes,,,
+Foliage biomass,Foliage DM,WF,tDM/ha
+Root biomass,Root DM,WR,tDM/ha
+"Stem biomass, including branches and bark",Stem DM,WS,tDM/ha
+Total biomass,Total DM,TotalW,tDM/ha
+Total litter fall over run,Total litter fall,TotalLitter,tDM/ha/yr
+Mean stem biomass per tree,Mean stem mass,AvStemMass,kgDM/tree
+Fraction of above ground woody biomass as branch and bark,Fract. as bark & branch,fracBB,
+Specific leaf area,SLA,SLA,m/kg
+Annual outputs,,,
+Light utilisation efficiency based on above ground biomass,Above ground epsilon,AbvgrndEpsilon,gDM/MJ
+Light utilisation efficiency based on total biomass,Total epsilon,TotalEpsilon,gDM/MJ
+Annual total evapoptranspiration,Annual ET,CumEvapTransp,mm/yr
+Annual total transpiration,Annual transp.,cumTransp,mm/yr
+Annual total supplemental irrigation,Annual suppl. irrigation,cumIrrig,mm/yr
+Annual total net primary production,Annual NPP,cumNPP,tDM/ha/yr
+Growth modifiers,,,
+Age dependent modifier,fAge,fAge,
+VPDdependent modifier,fVPD,fVPD,
+Temperature dependent modifier,fTemp,fT,
+Frost dependent modifier,fFrost,fFrost,
+Soil water dependent modifier,fSW,fSW,
+Nutrion dependent modifier,fNutr,fNutr,
+Physiological modifier of canopy conductance,Phys. modifier,PhysMod,
+Fertility dependent modifier of root biomass partitioning,m,m,
+Biomass production and partitioning,,,
+Net primary production,Monthly NPP,NPP,tDM/ha/month
+Canopy quantum efficiency after application of modifiers,Canopy alpha,alphaC,mol/mol
+Fraction of NPP partitioned to roots,pR,pR,
+Fraction of NPP partitioned to stems,pS,pS,
+Fraction of NPP partitioned to foliage,pF,pF,
+Ratio of foliage to stem biomass partitioning,pFS,pFS,
+Leaf litterfall rate,Litter fall rate,Littfall,per month
+Litter fall in current period,Litter fall,delLitter,tDM/ha/month
+Stem mortality,,,
+Maximum tree stem mass at current stocking,wSmax,wSmax,kg/tree
+Number of stems dying,Dying stems,delStemNo,trees/ha
+Water use,,,
+Available soil water,ASW,ASW,mm
+Monthly supplemental irrigation (to maintain minASW),Monthly supp. irrig.,monthlyIrrig,mm/month
+Monthly evapoptranspiration rate,Monthly ET,EvapTransp,mm/month
+Monthly transpiration rate,Monthly transp.,Transp,mm/month
+Canopy conductance,Canopy conductance,CanCond,
+Climatic factors,,,
+Day length (sunrise to sunset),Daylength,DayLength,s/day
+Mean number of frost days per month,Frost days,FrostDays,days/month
+Mean daily incident solar radiation,Solar rad.,SolarRad,MJ m-/day
+Mean daily temperature,Mean temp.,Tav,oC
+Mean daily VPD,VPD,VPD,mBar
+Mean monthly rainfall,Rainfall,Rain,mm/F31month

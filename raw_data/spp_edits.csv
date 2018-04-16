@@ -1,0 +1,64 @@
+Name,Units,Category,Meaning/comments,Eucalyptus globulus,Pinus radiata,Pseudotsuga menziesii,Picea sitchensis,Pinus ponderosa,Pinus contorta,Pinus taeda
+pFS2,-,BiomassPartition,Foliage:stem partitioning ratio @ D=2 cm,1,0.8,1.3,1.3,1.328,1.55,0.8
+pFS20,-,BiomassPartition,Foliage:stem partitioning ratio @ D=20 cm,0.5,0.4,0.7,0.8,0.75,0.55,0.45
+aS,-,BiomassPartition,Constant in the stem mass v. diam. relationship,0.095,0.0243,0.0843,0.108317353,0.0046,0.0073,0.1
+nS,-,BiomassPartition,Power in the stem mass v. diam. relationship,2.4,2.72,2.4359,2.1896,2.97,3.282,2.5
+pRx,-,BiomassPartition,Maximum fraction of NPP to roots,0.8,0.6,0.8,0.5,0.8,0.8,0.4
+pRn,-,BiomassPartition,Minimum fraction of NPP to roots,0.25,0.25,0.25,0.25,0.25,0.25,0.2
+gammaFx,1/month,BiomassPartition,Maximum litterfall rate,0.027,0.03,0.02,0.0143,0.021,0.015,0.042
+gammaF0,1/month,BiomassPartition,Litterfall rate at t = 0,0.001,0.001,0.001,0.001,0.001,0.001,0.001
+tgammaF,months,BiomassPartition,Age at which litterfall rate has median value,12,36,36,24,36,120,24
+gammaR,1/month,BiomassPartition,Average monthly root turnover rate,0.015,0.015,0.2,0.015,0.015,0.015,0.168
+Tmin,deg. C,CanopyProduction,Minimum temperature for growth,8.5,0,-7,-5,-7,-5,4
+Topt,deg. C,CanopyProduction,Optimum temperature for growth,16,20,18,15,18,15,25
+Tmax,deg. C,CanopyProduction,Maximum temperature for growth,40,32,40,35,40,30,38
+kF,days,CanopyProduction,Days production lost per frost day,0,1,1,1,1,1,1
+SWconst,-,CanopyProduction,Moisture ratio deficit for fq = 0.5 ,0.7,0.7,0.7,0.7,0.7,0.7,0.7
+SWpower,-,CanopyProduction,Power of moisture ratio deficit,9,9,9,9,9,9,9
+fCalpha700,-,CanopyProduction,Assimialtion enhancement factor at 700 ppm,1.4,1.4,1.4,1.4,1.4,1.4,1.17
+fCg700,-,CanopyProduction,Canopy conductance enhancement factor at 700 ppm,0.7,0.7,0.7,0.7,0.7,0.7,1
+m0,-,CanopyProduction,Value of 'm' when FR = 0,0,0,0,0,0,0,0
+fN0,-,CanopyProduction,Value of 'fNutr' when FR = 0,1,0.6,0.37,0.3,0.3,0.3,0.3
+fNn,-,CanopyProduction,Power of (1-FR) in 'fNutr' ,0,1,1,1,1,1,1
+MaxAge,years,CanopyProduction,Maximum stand age used in age modifier,50,50,300,500,300,150,200
+nAge,-,CanopyProduction,Power of relative age in function for fAge,4,4,4,4,4,4,1.5
+rAge,-,CanopyProduction,Relative age to give fAge = 0.5,0.95,0.5,0.95,0.95,0.95,0.95,0.75
+gammaNx,%/year,StemMortality,Mortality rate for large t,0,0,0,0,0,0,0.392
+gammaN0,%/year,StemMortality,Seedling mortality rate (t = 0),0,0,0,0,0,0,2.32
+tgammaN,years,StemMortality,Age at which mortality rate has median value,0,0,0,0,0,0,10.8528
+ngammaN,-,StemMortality,Shape of mortality response,1,1,1,1,1,1,1
+wSx1000,kg/tree,StemMortality,Max. stem mass per tree @ 1000 trees/hectare,300,160,300,300,300,220,230
+thinPower,-,StemMortality,Power in self-thinning rule,1.5,1.5,1.5,1.5,1.5,1.5,1.174
+mF,-,StemMortality,Fraction mean single-tree foliage biomass lost per dead tree,0,0,0,0,0,0,0
+mR,-,StemMortality,Fraction mean single-tree root biomass lost per dead tree,0.2,0.2,0.2,0.2,0.2,0.2,0.2
+mS,-,StemMortality,Fraction mean single-tree stem biomass lost per dead tree,0.2,0.2,0.2,0.2,0.2,0.2,0.4
+SLA0,m2/kg,StemMortality,Specific leaf area at age 0,11,5,5.5,7,3.1,3.1,5.5287
+SLA1,m2/kg,StemMortality,Specific leaf area for mature leaves,4,5,5.5,7,3.1,3.1,3.8754
+tSLA,years,StemMortality,Age at which specific leaf area = (SLA0+SLA1)/2,2.5,2,3,2.5,2.5,2.5,5.971
+k,-,CanopyProduction,Extinction coefficient for absorption of PAR by canopy,0.5,0.5,0.5,0.5,0.5,0.5,0.57
+fullCanAge,years,CanopyProduction,Age at canopy cover ,3,3,15,0.15,15,15,5
+MaxIntcptn,-,WaterBalance,Maximum proportion of rainfall evaporated from canopy,0.15,0.15,0.15,0.055,0.1,0.1,0.2
+LAImaxIntcptn,-,WaterBalance,LAI for maximum rainfall interception,5,5,5,5,5,5,5
+alpha,molC/molPAR,CanopyProduction,Canopy quantum efficiency,0.06,0.05,0.055,0.055,0.055,0.035,0.053
+y,-,CanopyProduction,Ratio NPP/GPP,0.47,0.47,0.47,0.47,0.47,0.47,0.47
+MinCond,m/s,BiomassPartition,Minimum canopy conductance,0,0,0.01,0,0,0,0
+MaxCond,m/s,BiomassPartition,Maximum canopy conductance,0.02,0.02,0.012,0.02,0.012,0.012,0.0118
+LAIgcx,-,BiomassPartition,LAI for maximum canopy conductance,3.33,3.33,5,0.006,5,5,3
+CoeffCond,1/mBar,CanopyProduction,Defines stomatal response to VPD,0.05,0.05,0.05,0.05,0.05,0.05,0.0408
+BLcond,m/s,WaterBalance,Canopy boundary layer conductance,0.2,0.2,0.2,0.2,0.14,0.2,0.2
+fracBB0,-,StemMortality,Branch and bark fraction at age 0,0.75,0.5,0.15,0.15,0.15,0.15,1.1983
+fracBB1,-,StemMortality,Branch and bark fraction for mature stands,0.15,0.1,0.05,0.15,0.15,0.15,0.2349
+tBB,years,StemMortality,Age at which fracBB = (fracBB0+fracBB1)/2,2,5,30,1.5,1.5,1.5,1.7367
+rhoMin,t/m3,StemMortality,Minimum basic density - for young trees,0.45,0.48,0.4,0.4,0.4,0.4,0.358
+rhoMax,t/m3,StemMortality,Maximum basic density - for older trees,0.45,0.48,0.45,0.4,0.4,0.4,0.482
+tRho,years,StemMortality,Age at which rho = (rhoMin+rhoMax)/2,4,4,20,4,4,4,7.054
+aH,-,BiomassPartition,Constant in the stem height relationship,0,0,0,0,0,0,0
+nHB,-,BiomassPartition,Power of DBH in the stem height relationship,0,0,0,0,0,0,0
+nHN,-,BiomassPartition,Power of stocking in the stem height relationship,0,0,0,0,0,0,0
+aV,-,BiomassPartition,Constant in the stem volume relationship,0,0,0,0,0,0,0
+nVB,-,BiomassPartition,Power of DBH in the stem volume relationship,0,0,0,0,0,0,0
+nVN,-,BiomassPartition,Power of stocking in the stem volume relationship,0,0,0,0,0,0,0
+Qa,W/m2,CanopyProduction,Intercept of net v. solar radiation relationship,-90,-90,-90,-90,-90,-90,-90
+Qb,-,CanopyProduction,Slope of net v. solar radiation relationship,0.8,0.8,0.8,0.8,0.8,0.8,0.8
+gDM_mol,gDM/mol,CanopyProduction,Molecular weight of dry matter,24,24,24,24,24,24,24
+molPAR_MJ,mol/MJ,CanopyProduction,Conversion of solar radiation to PAR,2.3,2.3,2.3,2.3,2.3,2.3,2.3
