@@ -32,7 +32,7 @@ instance3PG <- function(config, climate = NULL, output = FALSE, python_indexing 
       VPD = climate[,grep(pattern = "^(VPD|vpd)$", x = colnames(climate))],
       rain = climate[,grep(pattern = "^(Rain|rain)$", x = colnames(climate))],
       solar_rad = climate[,grep(pattern = "^(Solar.rad|Solar_rad|SolarRad)$", x = colnames(climate))],
-      frost_days = as.integer(climate[,grep(pattern = "^(Frost.Days|Frost_Days|FrostDays)$", x = colnames(climate))]),
+      frost_days = as.integer(climate[,grep(pattern = "^(Frost.Days|Frost_Days|FrostDays|Frost.days)$", x = colnames(climate))]),
       CaMonthly = climate[,grep(pattern = "^(CaMonthly|Ca|CO2)$", x = colnames(climate))],
       D13Catm = climate[,grep(pattern = "^(D13Catm|D13C|d13C)$", x = colnames(climate))],
       d18Osrc = climate[,grep(pattern = "^(d18O|d18Osrc|d18O|D18O)$", x = colnames(climate))]
@@ -97,7 +97,7 @@ instance3PG <- function(config, climate = NULL, output = FALSE, python_indexing 
                     output_vars <- matrix(data = sapply(X = out_var_names, FUN = dynGet), nrow = 1, ncol = length(out_var_names), dimnames = list(NULL,out_var_names))
 
                 } else {
-                    #print(paste('month: ', month + 1, " and metMonth:", metMonth + 1, sep = ""))
+                    print(paste('month: ', month + 1, " and metMonth:", metMonth + 1, sep = ""))
 
                     # assign meteorological data at this month
                     if(month > 12){month = 1}
