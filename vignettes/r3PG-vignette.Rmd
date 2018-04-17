@@ -3,9 +3,9 @@ title: "Modeling plant stable isotopes using the 3PG forest growth model in R"
 author: "Daniel M Griffith"
 date: "April 12, 2018"
 output:
-  pdf_document: default
   html_document:
     df_print: paged
+  pdf_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -61,7 +61,7 @@ lines(doug.run$D13CTissue+1.5 ~ 1, type = "l", col = "darkorange")
 
 ## Compare species at sites
 
-```{r species, echo=FALSE, fig.align = 'center', fig.width = 3, fig.height = 3}
+```{r speciessites, echo=FALSE, fig.align = 'center', fig.width = 3, fig.height = 3}
 data("clim.Argentina")
 data("clim.BritishColumbia")
 data("clim.NorthCarolina")

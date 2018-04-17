@@ -58,6 +58,8 @@ instance3PG <- function(config, climate = NULL, output = FALSE, python_indexing 
             # do monthly calculations
             month = InitialMonth 
             for(month_counter in 1:12){
+                #print(paste('month: ', month, " and metMonth:", metMonth, sep = ""))
+
                 if(year == StartAge & month == InitialMonth){
                     WS = InitialWS
                     WF = InitialWF
@@ -97,7 +99,6 @@ instance3PG <- function(config, climate = NULL, output = FALSE, python_indexing 
                     output_vars <- matrix(data = sapply(X = out_var_names, FUN = dynGet), nrow = 1, ncol = length(out_var_names), dimnames = list(NULL,out_var_names))
 
                 } else {
-                    print(paste('month: ', month + 1, " and metMonth:", metMonth + 1, sep = ""))
 
                     # assign meteorological data at this month
                     if(month > 12){month = 1}
