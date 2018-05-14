@@ -3,14 +3,20 @@ title: "Modeling plant stable isotopes using the 3PG forest growth model in R"
 author: "Daniel M Griffith"
 date: "April 12, 2018"
 output:
+  pdf_document: default
   html_document:
     df_print: paged
-  pdf_document: default
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+
+The r3PG R package implements the 3-PG (Physiological Processes Predicting Growth) model which was originally developed by [Landsberg and Waring (1997)](https://www.sciencedirect.com/science/article/pii/S0378112797000261). Specifically, this R implementation of the model is based directly on the Python version created by [Wei et al. (2014)](https://www.sciencedirect.com/science/article/pii/S0378112713007226) to incorporate predictions of stable isotope compositions. This vignette is focused specifically on using r3PG and predicting carbon and oxygen isotopic values. For a thorough introduction to 3PG and raw data for many of the examples presented here, check out the [course materials](http://3pg.forestry.ubc.ca/3-pg-course/) available online.
+
+As implemented in R, the 3PG model requires two types of input which are climate data and information about the site and tree species. This structure is a legacy from the earlier vesions, and for compatibility ".cfg" files used in the Python version can also be used. However, r3PG also accepts native R objects and includes functions for reading and editing model configuration data within R. 
+
+Below, we provide a workflow for comparing the stable isotope predictions for a variety of tree species at four sites with different climates.
 
 ## Installation
 
@@ -23,28 +29,43 @@ install_github(repo = "griffithdan/r3PG")
 library(r3PG)
 ```
 
-## Load example dataset
+## Load example climate data
 
-```{r plots, results='hide', fig.align = 'center', fig.width = 3, fig.height = 3}
-data("example.config")
-data("example.clim")
-plot(example.clim[,1:3])
+The "r3PG" R package has monthly climate normals available for four example sites.
+
+```{r, results='hide', fig.align = 'center', fig.width = 8, fig.height = 5}
+data("clim.WesternOR")
+data("clim.Argentina")
+data("clim.NorthCarolina")
+data("clim.BritishColumbia")
+
+par(mfrow = c(1,2))
+  with(clim.WesternOR, plot(Tav ~ c(1:12), type = "l", ylab = NA, xlab = "", ylim = c(-10,20), 
+                            xaxt = "n", col = "dodgerblue", main = "Mean Temperature"))
+    with(clim.Argentina, lines(y = Tav, x = c(1:12), col = "darkorange"))    
+    with(clim.BritishColumbia, lines(y = Tav, x = c(1:12), col = "darkgreen"))    
+    with(clim.NorthCarolina, lines(y = Tav, x = c(1:12), col = "darkorange"))    
+        axis(side = 1, at = c(1:12), labels = month.abb, las = 2)
+
+     
+    
+    
+    
+  
 ```
 
-## Run example dataset
+## Load example configuration data
 
-```{r example, results='hide', fig.align = 'center', fig.width = 3, fig.height = 3}
-output <- run_3pg(config = example.config, 
-                  climate = example.clim, 
-                  output = FALSE, 
-                  python_indexing = FALSE)
-head(output)
-plot(output$D13CTissue ~ 1, type = "l") # add 1.5 to get gfrom wood to cellulose
+```{r, results='hide', fig.align = 'center', fig.width = 5, fig.height = 5}
+
+
+
 ```
+
 
 ## Compare species
 
-```{r species, results='hide', fig.align = 'center', fig.width = 3, fig.height = 3}
+```{r species, results='hide', fig.align = 'center', fig.width = 5, fig.height = 5}
 data("cfg.Pseudotsuga.menziesii")
 data("cfg.Pinus.ponderosa")
 pipo.run <- run_3pg(config = cfg.Pinus.ponderosa, 
@@ -55,13 +76,17 @@ doug.run <- run_3pg(config = cfg.Pseudotsuga.menziesii,
                     climate = example.clim, 
                     output = FALSE, 
                     python_indexing = FALSE)
-plot(pipo.run$D13CTissue+1.5 ~ 1, type = "l", col = "dodgerblue")
-lines(doug.run$D13CTissue+1.5 ~ 1, type = "l", col = "darkorange")
+
+example.clim$date <- apply(X = cbind(example.clim$Year, example.clim$Month), MARGIN = 1, FUN = function(x){paste(x[1], x[2], 15, sep = "-")})
+example.clim$date <- strptime(x = example.clim$date, format = "%Y-%m-%d")
+
+plot(tail(pipo.run$D13CTissue+1.5,100) ~ as.Date(tail(example.clim$date, 100)), type = "l", col = "dodgerblue", ylab = "d13C wood", xlab = "") # add 1.5 to get gfrom wood to cellulose
+lines(tail(doug.run$D13CTissue+1.5,100) ~ as.Date(tail(example.clim$date, 100)), type = "l", col = "darkorange", ylab = "d13C wood", xlab = "")
 ```
 
 ## Compare species at sites
 
-```{r speciessites, results='hide', fig.align = 'center', fig.width = 3, fig.height = 3}
+```{r speciessites, results='hide', fig.align = 'center', fig.width = 6, fig.height = 6}
 data("clim.Argentina")
 data("clim.BritishColumbia")
 data("clim.NorthCarolina")
@@ -79,9 +104,34 @@ pipo.WOR.run <- run_3pg(config = cfg.Pinus.ponderosa,
                     climate = clim.WesternOR, 
                     output = FALSE, 
                     python_indexing = FALSE)
-plot(pipo.Arg.run$D13CTissue+1.5 ~ 1, type = "l", col = "dodgerblue")
-lines(pipo.WOR.run$D13CTissue+1.5 ~ 1, type = "l", col = "darkorange")
+
+pipo.Arg.run$D13CTissue <- pipo.Arg.run$D13CTissue + 1.5
+pipo.WOR.run$D13CTissue <- pipo.WOR.run$D13CTissue + 1.5 
+
+plot(tail(pipo.Arg.run$D13CTissue, 12) ~ 1, xaxt = "n", type = "l", col = "dodgerblue", ylab = "d13C wood", xlab = "")
+  lines(tail(pipo.WOR.run$D13CTissue, 12) ~ 1, type = "l", col = "darkorange", ylab = "d13C wood", xlab = "")
+  axis(side = 1, at = c(1:12), labels = month.abb)
+
+data("cfg.Eucalyptus.globulus")
+data("cfg.Picea.sitchensis")
+data("cfg.Pinus.contorta")
+data("cfg.Pinus.radiata")
+data("cfg.Pinus.taeda")
 ```
+
+## References
+
+[Landsberg, J.J., and R.H. Waring. "A Generalised Model of Forest Productivity Using Simplified Concepts of Radiation-Use Efficiency, Carbon Balance and Partitioning." Forest Ecology and Management 95, no. 3 (August 1997): 209-28. https://doi.org/10.1016/S0378-1127(97)00026-1.](https://www.sciencedirect.com/science/article/pii/S0378112797000261)
+
+[Wei, Liang, John D. Marshall, Jianwei Zhang, Hang Zhou, and Robert F. Powers. "3-PG Simulations of Young Ponderosa Pine Plantations under Varied Management Intensity: Why Do They Grow so Differently?" Forest Ecology and Management 313 (February 2014): 69-82. https://doi.org/10.1016/j.foreco.2013.10.035.](https://www.sciencedirect.com/science/article/pii/S0378112713007226)
+
+
+
+
+
+
+
+
 
 
 

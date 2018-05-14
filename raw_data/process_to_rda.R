@@ -96,8 +96,8 @@
   clim.WesternOR <- read.csv("raw_data/clim-western-OR.csv") 
     
       tmp <- clim.Argentina
-      tmp$Tav <- (tmp$Tmax - tmp$Tmin) / 2
-      tmp$VPD <- get_VPD(T_max = tmp$Tmax, T_min = tmp$Tmin) 
+      tmp$Tav <- apply(X = cbind(tmp$Tmax,tmp$Tmin), MARGIN = 1, FUN = mean)
+      tmp$VPD <- r3PG:::get_VPD(T_max = tmp$Tmax, T_min = tmp$Tmin) 
       tmp$Ca <- tail(example.clim$Ca, 12)
       tmp$D13Catm <- tail(example.clim$D13Catm, 12)
       tmp$d18O <- tail(example.clim$d18O, 12)  
@@ -105,8 +105,8 @@
       clim.Argentina <- tmp
     
       tmp <- clim.BritishColumbia
-      tmp$Tav <- (tmp$Tmax - tmp$Tmin) / 2
-      tmp$VPD <- get_VPD(T_max = tmp$Tmax, T_min = tmp$Tmin) 
+      tmp$Tav <- apply(X = cbind(tmp$Tmax,tmp$Tmin), MARGIN = 1, FUN = mean)
+      tmp$VPD <- r3PG:::get_VPD(T_max = tmp$Tmax, T_min = tmp$Tmin) 
       tmp$Ca <- tail(example.clim$Ca, 12)
       tmp$D13Catm <- tail(example.clim$D13Catm, 12)
       tmp$d18O <- tail(example.clim$d18O, 12)  
@@ -114,8 +114,8 @@
       clim.BritishColumbia <- tmp    
         
       tmp <- clim.NorthCarolina
-      tmp$Tav <- (tmp$Tmax - tmp$Tmin) / 2
-      tmp$VPD <- get_VPD(T_max = tmp$Tmax, T_min = tmp$Tmin) 
+      tmp$Tav <- apply(X = cbind(tmp$Tmax,tmp$Tmin), MARGIN = 1, FUN = mean)
+      tmp$VPD <- r3PG:::get_VPD(T_max = tmp$Tmax, T_min = tmp$Tmin) 
       tmp$Ca <- tail(example.clim$Ca, 12)
       tmp$D13Catm <- tail(example.clim$D13Catm, 12)
       tmp$d18O <- tail(example.clim$d18O, 12)  
@@ -123,14 +123,32 @@
       clim.NorthCarolina <- tmp
     
       tmp <- clim.WesternOR
-      tmp$Tav <- (tmp$Tmax - tmp$Tmin) / 2
-      tmp$VPD <- get_VPD(T_max = tmp$Tmax, T_min = tmp$Tmin) 
+      tmp$Tav <- apply(X = cbind(tmp$Tmax,tmp$Tmin), MARGIN = 1, FUN = mean)
+      tmp$VPD <- r3PG:::get_VPD(T_max = tmp$Tmax, T_min = tmp$Tmin) 
       tmp$Ca <- tail(example.clim$Ca, 12)
       tmp$D13Catm <- tail(example.clim$D13Catm, 12)
       tmp$d18O <- tail(example.clim$d18O, 12)  
       tmp$Tmax <- tmp$Tmin <- NULL
       clim.WesternOR <- tmp    
     
+par(mfrow = c(1,2))
+
+  with(clim.WesternOR, plot(Tav ~ c(1:12), type = "l", ylab = NA, xlab = "", ylim = c(-20,40), 
+                            xaxt = "n", col = "dodgerblue", main = "Mean Temperature"))
+    with(clim.Argentina, lines(y = Tav, x = c(1:12), col = "darkorange"))    
+    with(clim.BritishColumbia, lines(y = Tav, x = c(1:12), col = "darkgreen"))    
+    with(clim.NorthCarolina, lines(y = Tav, x = c(1:12), col = "purple"))    
+        axis(side = 1, at = c(1:12), labels = month.abb, las = 2)
+        
+  with(clim.WesternOR, plot(Rain ~ c(1:12), type = "l", ylab = NA, xlab = "", ylim = c(0,500), 
+                            xaxt = "n", col = "dodgerblue", main = "Mean Temperature"))
+    with(clim.Argentina, lines(y = Rain, x = c(1:12), col = "darkorange"))    
+    with(clim.BritishColumbia, lines(y = Rain, x = c(1:12), col = "darkgreen"))    
+    with(clim.NorthCarolina, lines(y = Rain, x = c(1:12), col = "purple"))    
+        axis(side = 1, at = c(1:12), labels = month.abb, las = 2)
+                
+        
+      
   save(clim.Argentina, file = "data/clim.Argentina.RData")      
   save(clim.BritishColumbia, file = "data/clim.BritishColumbia.RData")      
   save(clim.NorthCarolina, file = "data/clim.NorthCarolina.RData")      
