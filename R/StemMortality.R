@@ -54,8 +54,8 @@ update_stands <- function(stand_age, WF, WS, AvStemMass, StemNo, SLA, fracBB, St
     # update stsand characteristics
     LAI = WF * SLA * 0.1
     avDBH = (AvStemMass / StemConst) ^ (1 / StemPower)
-    BasArea = round((((avDBH / 200) ^ 2) * pi) * StemNo, 14) # does rounding solve this?
-    StandVol = round(WS * (1 - fracBB) / Density, 14) # does rounding solve this?
+    BasArea = (((avDBH / 200) ^ 2) * pi) * StemNo
+    StandVol = WS * (1 - fracBB) / Density
     if(stand_age > 0){
         MAI = StandVol / stand_age
     } else {
