@@ -77,9 +77,9 @@ instance3PG <- function(config, climate = NULL, output = FALSE, python_indexing 
 
                     AvStemMass = WS * 1000 / StemNo                 # kg/tree
                     avDBH = (AvStemMass / StemConst) ^ (1 / StemPower)
-                    BasArea = (((avDBH / 200) ^ 2) * pi) * StemNo
+                    BasArea = round((((avDBH / 200) ^ 2) * pi) * StemNo, 14) # does rounding solve this?
                     LAI = WF * SLA * 0.1
-                    StandVol = WS * (1 - fracBB) / Density
+                    StandVol = round(WS * (1 - fracBB) / Density, 14) # does rounding solve this?
 
                     if(stand_age > 0){
                         MAI = StandVol / stand_age
