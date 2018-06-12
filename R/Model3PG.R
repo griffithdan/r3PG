@@ -58,7 +58,7 @@ instance3PG <- function(config, climate = NULL, output = FALSE, python_indexing 
             # do monthly calculations
             month = InitialMonth 
             for(month_counter in 1:12){
-                #print(paste('month: ', month, " and metMonth:", metMonth, sep = ""))
+                print(paste('     month: ', month, " and metMonth:", metMonth, sep = ""))
 
                 if(year == StartAge & month == InitialMonth){
                     WS = InitialWS

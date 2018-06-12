@@ -14,18 +14,14 @@ knitr::opts_chunk$set(echo = TRUE)
 
 The r3PG R package implements the 3-PG (Physiological Processes Predicting Growth) model which was originally developed by [Landsberg and Waring (1997)](https://www.sciencedirect.com/science/article/pii/S0378112797000261). Specifically, this R implementation of the model is based directly on the Python version created by [Wei et al. (2014)](https://www.sciencedirect.com/science/article/pii/S0378112713007226) to incorporate predictions of stable isotope compositions. This vignette is focused specifically on using r3PG and predicting carbon and oxygen isotopic values. For a thorough introduction to 3PG and raw data for many of the examples presented here, check out the [course materials](http://3pg.forestry.ubc.ca/3-pg-course/) available online.
 
-As implemented in R, the 3PG model requires two types of input which are climate data and information about the site and tree species. This structure is a legacy from the earlier vesions, and for compatibility ".cfg" files used in the Python version can also be used. However, r3PG also accepts native R objects and includes functions for reading and editing model configuration data within R. 
-
-Below, we provide a workflow for comparing the stable isotope predictions for a variety of tree species at four sites with different climates.
+As implemented in R, the 3PG model requires two types of input which are climate data and information about the site and tree species. This structure is a legacy from the earlier vesions, and for compatibility ".cfg" files used in the Python version can also be used. However, r3PG also accepts native R objects and includes functions for reading and editing model configuration data within R. Below, we provide a workflow for comparing the stable isotope predictions for a variety of tree species at four sites with different climates.
 
 ## Installation
 
 Install r3PG from GitHub using devtools.
 
 ```{r installation, message = FALSE, warning = FALSE, results = 'hide'}
-install.packages("devtools", repos = "http://cran.us.r-project.org")
-library(devtools)
-install_github(repo = "griffithdan/r3PG")
+devtools::install_github(repo = "griffithdan/r3PG")
 library(r3PG)
 ```
 
@@ -34,89 +30,150 @@ library(r3PG)
 The "r3PG" R package has monthly climate normals available for four example sites.
 
 ```{r, results='hide', fig.align = 'center', fig.width = 8, fig.height = 5}
-data("clim.WesternOR")
-data("clim.Argentina")
-data("clim.NorthCarolina")
-data("clim.BritishColumbia")
+data("clim.WesternOR", "clim.Argentina", "clim.NorthCarolina", "clim.BritishColumbia")
+```
 
-par(mfrow = c(1,2))
-  with(clim.WesternOR, plot(Tav ~ c(1:12), type = "l", ylab = NA, xlab = "", ylim = c(-10,20), 
-                            xaxt = "n", col = "dodgerblue", main = "Mean Temperature"))
+```{r, echo = FALSE, message = FALSE, warning = FALSE, results = 'hide', fig.align = 'center', fig.width = 9, fig.height = 4}
+
+par(mfrow = c(1,2), mar = c(5, 4, 1, 2) + 0.1)
+
+  with(clim.WesternOR, plot(Tav ~ c(1:12), type = "l", xlab = "", ylim = c(-10,30), 
+                            xaxt = "n", col = "dodgerblue", ylab = expression(paste("Mean Temperature (",degree,C,")", sep = ""))))
     with(clim.Argentina, lines(y = Tav, x = c(1:12), col = "darkorange"))    
     with(clim.BritishColumbia, lines(y = Tav, x = c(1:12), col = "darkgreen"))    
-    with(clim.NorthCarolina, lines(y = Tav, x = c(1:12), col = "darkorange"))    
+    with(clim.NorthCarolina, lines(y = Tav, x = c(1:12), col = "purple"))    
         axis(side = 1, at = c(1:12), labels = month.abb, las = 2)
 
-     
-    
-    
+  with(clim.WesternOR, plot(Rain ~ c(1:12), type = "l", xlab = "", ylim = c(0,400), 
+                            xaxt = "n", col = "dodgerblue", ylab = expression("Rain (mm)")))
+    with(clim.Argentina, lines(y = Rain, x = c(1:12), col = "darkorange"))    
+    with(clim.BritishColumbia, lines(y = Rain, x = c(1:12), col = "darkgreen"))    
+    with(clim.NorthCarolina, lines(y = Rain, x = c(1:12), col = "purple"))    
+        axis(side = 1, at = c(1:12), labels = month.abb, las = 2)
+        
+  legend("topright", legend = c("Western OR","Argentina","British Columbia","North Carolina"), lwd = 1, lty = 1, col = c("dodgerblue","darkorange","darkgreen","purple"))
     
   
 ```
 
 ## Load example configuration data
 
+The "r3PG" R package includes configurations for seven tree species. We can compare some of the parameters that are different. However, note that the configurations use the same parameters for most of the site variable (based on OR). 
+
 ```{r, results='hide', fig.align = 'center', fig.width = 5, fig.height = 5}
-
-
-
-```
-
-
-## Compare species
-
-```{r species, results='hide', fig.align = 'center', fig.width = 5, fig.height = 5}
 data("cfg.Pseudotsuga.menziesii")
 data("cfg.Pinus.ponderosa")
-pipo.run <- run_3pg(config = cfg.Pinus.ponderosa, 
-                    climate = example.clim, 
-                    output = FALSE, 
-                    python_indexing = FALSE)
-doug.run <- run_3pg(config = cfg.Pseudotsuga.menziesii, 
-                    climate = example.clim, 
-                    output = FALSE, 
-                    python_indexing = FALSE)
-
-example.clim$date <- apply(X = cbind(example.clim$Year, example.clim$Month), MARGIN = 1, FUN = function(x){paste(x[1], x[2], 15, sep = "-")})
-example.clim$date <- strptime(x = example.clim$date, format = "%Y-%m-%d")
-
-plot(tail(pipo.run$D13CTissue+1.5,100) ~ as.Date(tail(example.clim$date, 100)), type = "l", col = "dodgerblue", ylab = "d13C wood", xlab = "") # add 1.5 to get gfrom wood to cellulose
-lines(tail(doug.run$D13CTissue+1.5,100) ~ as.Date(tail(example.clim$date, 100)), type = "l", col = "darkorange", ylab = "d13C wood", xlab = "")
-```
-
-## Compare species at sites
-
-```{r speciessites, results='hide', fig.align = 'center', fig.width = 6, fig.height = 6}
-data("clim.Argentina")
-data("clim.BritishColumbia")
-data("clim.NorthCarolina")
-data("clim.WesternOR")
-
-cfg.Pinus.ponderosa$TimeRange
-  cfg.Pinus.ponderosa$TimeRange$EndAge <- 25
-  cfg.Pinus.ponderosa$TimeRange$EndYear <- 1975
-
-pipo.Arg.run <- run_3pg(config = cfg.Pinus.ponderosa, 
-                    climate = clim.Argentina, 
-                    output = FALSE, 
-                    python_indexing = FALSE)
-pipo.WOR.run <- run_3pg(config = cfg.Pinus.ponderosa, 
-                    climate = clim.WesternOR, 
-                    output = FALSE, 
-                    python_indexing = FALSE)
-
-pipo.Arg.run$D13CTissue <- pipo.Arg.run$D13CTissue + 1.5
-pipo.WOR.run$D13CTissue <- pipo.WOR.run$D13CTissue + 1.5 
-
-plot(tail(pipo.Arg.run$D13CTissue, 12) ~ 1, xaxt = "n", type = "l", col = "dodgerblue", ylab = "d13C wood", xlab = "")
-  lines(tail(pipo.WOR.run$D13CTissue, 12) ~ 1, type = "l", col = "darkorange", ylab = "d13C wood", xlab = "")
-  axis(side = 1, at = c(1:12), labels = month.abb)
-
 data("cfg.Eucalyptus.globulus")
 data("cfg.Picea.sitchensis")
 data("cfg.Pinus.contorta")
 data("cfg.Pinus.radiata")
 data("cfg.Pinus.taeda")
+
+```
+
+```{r, echo = FALSE, message = FALSE, warning = FALSE, results = 'hide', fig.align = 'center', fig.width = 4, fig.height = 3}
+
+  par(mar = c(5, 4, 1, 2) + 0.1)
+
+# What parameters are different between Douglas fir and Ponderosa pine.
+  parameters <- names(unlist(cfg.Pseudotsuga.menziesii))
+  spp_parameters <- unlist(cfg.Pseudotsuga.menziesii) != unlist(cfg.Pinus.ponderosa)
+  douglas.fir <- as.numeric(unlist(cfg.Pseudotsuga.menziesii)[spp_parameters])
+  ponderosa.pine <- as.numeric(unlist(cfg.Pinus.ponderosa)[spp_parameters])
+  paramlabs <- names(unlist(cfg.Pinus.ponderosa)[spp_parameters])
+    paramlabs <- unlist(lapply(X = strsplit(split = "\\.", paramlabs), FUN = function(x){x[2]}))
+  plot(log(douglas.fir) ~ c(1:length(douglas.fir)), xaxt = "n", ylab = "log(parameter value)", xlab = "", pch = 21, bg = "dodgerblue", cex = 1)
+    points(y = log(ponderosa.pine),x = c(1:length(ponderosa.pine)), xaxt = "n", ylab = "", xlab = "", pch = 21, bg = "darkorange", cex = 1)
+            axis(side = 1, at = c(1:length(ponderosa.pine)), labels = paramlabs, las = 2)
+
+  legend("topleft", pch = 21,
+         legend = c("Douglas fir","Ponderosa pine"), 
+         pt.bg = c("dodgerblue","darkorange"))
+
+  
+```
+
+
+Now we should modify some other configuration detials for the model runs, such as changing the duration of the run. 
+
+```{r, results='hide', fig.align = 'center', fig.width = 5, fig.height = 5}
+
+cfg.Pinus.ponderosa$TimeRange
+  cfg.Pinus.ponderosa$TimeRange$EndAge <- 25
+  cfg.Pinus.ponderosa$TimeRange$EndYear <- 1975
+  cfg.Pseudotsuga.menziesii$TimeRange$EndAge <- 25
+  cfg.Pseudotsuga.menziesii$TimeRange$EndYear <- 1975
+  
+```
+
+## Run the 3PG model for two species in four climates
+
+```{r, results='hide', fig.align = 'center', fig.width = 5, fig.height = 5}
+
+doug.OR <- run_3pg(config = cfg.Pseudotsuga.menziesii, 
+                    climate = clim.WesternOR, output = FALSE, python_indexing = FALSE)
+doug.AR <- run_3pg(config = cfg.Pseudotsuga.menziesii, 
+                    climate = clim.Argentina, output = FALSE, python_indexing = FALSE)
+doug.BC <- run_3pg(config = cfg.Pseudotsuga.menziesii, 
+                    climate = clim.BritishColumbia, output = FALSE, python_indexing = FALSE)
+doug.NC <- run_3pg(config = cfg.Pseudotsuga.menziesii, 
+                    climate = clim.NorthCarolina, output = FALSE, python_indexing = FALSE)
+
+pipo.OR <- run_3pg(config = cfg.Pinus.ponderosa, 
+                    climate = clim.WesternOR, output = FALSE, python_indexing = FALSE)
+pipo.AR <- run_3pg(config = cfg.Pinus.ponderosa, 
+                    climate = clim.Argentina, output = FALSE, python_indexing = FALSE)
+pipo.BC <- run_3pg(config = cfg.Pinus.ponderosa, 
+                    climate = clim.BritishColumbia, output = FALSE, python_indexing = FALSE)
+pipo.NC <- run_3pg(config = cfg.Pinus.ponderosa, 
+                    climate = clim.NorthCarolina, output = FALSE, python_indexing = FALSE)
+
+# Convert from D13C of cellulose to wood
+  doug.OR$D13CTissue <- doug.OR$D13CTissue + 1.5
+  doug.AR$D13CTissue <- doug.AR$D13CTissue + 1.5
+  doug.BC$D13CTissue <- doug.BC$D13CTissue + 1.5
+  doug.NC$D13CTissue <- doug.NC$D13CTissue + 1.5
+  pipo.OR$D13CTissue <- pipo.OR$D13CTissue + 1.5
+  pipo.AR$D13CTissue <- pipo.AR$D13CTissue + 1.5
+  pipo.BC$D13CTissue <- pipo.BC$D13CTissue + 1.5
+  pipo.NC$D13CTissue <- pipo.NC$D13CTissue + 1.5
+  
+# Threshold
+  npp.threshold <- -22
+  doug.OR[doug.OR$D13CTissue > npp.threshold,] <- NA
+  doug.AR[doug.AR$D13CTissue > npp.threshold,] <- NA
+  doug.BC[doug.BC$D13CTissue > npp.threshold,] <- NA
+  doug.NC[doug.NC$D13CTissue > npp.threshold,] <- NA
+  pipo.OR[pipo.OR$D13CTissue > npp.threshold,] <- NA
+  pipo.AR[pipo.AR$D13CTissue > npp.threshold,] <- NA
+  pipo.BC[pipo.BC$D13CTissue > npp.threshold,] <- NA
+  pipo.NC[pipo.NC$D13CTissue > npp.threshold,] <- NA
+```
+
+## Plot D13C by site and species
+
+```{r, echo = FALSE, message = FALSE, warning = FALSE, results = 'hide', fig.align = 'center', fig.width = 9, fig.height = 4}
+
+par(mfrow = c(2,2), mar = c(2.5,4,3,1))
+
+  with(tail(doug.OR, 12), plot(D13CTissue ~ c(1:12), ylim = c(-32, -22), type = "l", xlab = "", main = "Western OR", xaxt = "n", col = "dodgerblue", ylab = expression(Wood ~{delta}^13*C~'\211')))
+    with(tail(pipo.OR, 12), lines(y = D13CTissue, x = c(1:12), col = "darkorange"))    
+    axis(side = 1, at = c(1:12), labels = month.abb, las = 2)
+
+  with(tail(doug.AR, 12), plot(D13CTissue ~ c(1:12), ylim = c(-32, -22), type = "l", xlab = "", main = "Argentina", xaxt = "n", col = "dodgerblue", ylab = expression(Wood ~{delta}^13*C~'\211')))
+    with(tail(pipo.AR, 12), lines(y = D13CTissue, x = c(1:12), col = "darkorange"))    
+    axis(side = 1, at = c(1:12), labels = month.abb, las = 2)
+
+  with(tail(doug.BC, 12), plot(D13CTissue ~ c(1:12), ylim = c(-32, -22), type = "l", xlab = "", main = "British Columbia", xaxt = "n", col = "dodgerblue", ylab = expression(Wood ~{delta}^13*C~'\211')))
+    with(tail(pipo.BC, 12), lines(y = D13CTissue, x = c(1:12), col = "darkorange"))    
+    axis(side = 1, at = c(1:12), labels = month.abb, las = 2)
+
+  with(tail(doug.NC, 12), plot(D13CTissue ~ c(1:12), ylim = c(-32, -22), type = "l", xlab = "", main = "North Carolinas", xaxt = "n", col = "dodgerblue", ylab = expression(Wood ~{delta}^13*C~'\211')))
+    with(tail(pipo.NC, 12), lines(y = D13CTissue, x = c(1:12), col = "darkorange"))    
+    axis(side = 1, at = c(1:12), labels = month.abb, las = 2)
+          
+    legend("topright", legend = c("Douglas fir","Ponderosa pine"), lwd = 1, lty = 1, col = c("dodgerblue","darkorange"))    
+  
 ```
 
 ## References
