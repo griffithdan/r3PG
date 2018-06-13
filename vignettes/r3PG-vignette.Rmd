@@ -3,9 +3,9 @@ title: "Modeling plant stable isotopes using the 3PG forest growth model in R"
 author: "Daniel M Griffith"
 date: "April 12, 2018"
 output:
-  pdf_document: default
   html_document:
     df_print: paged
+  pdf_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -112,21 +112,23 @@ cfg.Pinus.ponderosa$TimeRange
 
 doug.OR <- run_3pg(config = cfg.Pseudotsuga.menziesii, 
                     climate = clim.WesternOR, output = FALSE, python_indexing = FALSE)
-doug.AR <- run_3pg(config = cfg.Pseudotsuga.menziesii, 
-                    climate = clim.Argentina, output = FALSE, python_indexing = FALSE)
 doug.BC <- run_3pg(config = cfg.Pseudotsuga.menziesii, 
                     climate = clim.BritishColumbia, output = FALSE, python_indexing = FALSE)
 doug.NC <- run_3pg(config = cfg.Pseudotsuga.menziesii, 
                     climate = clim.NorthCarolina, output = FALSE, python_indexing = FALSE)
+cfg.Pseudotsuga.menziesii$SiteCharacteristics$lat <- -40
+doug.AR <- run_3pg(config = cfg.Pseudotsuga.menziesii, 
+                    climate = clim.Argentina, output = FALSE, python_indexing = FALSE)
 
 pipo.OR <- run_3pg(config = cfg.Pinus.ponderosa, 
                     climate = clim.WesternOR, output = FALSE, python_indexing = FALSE)
-pipo.AR <- run_3pg(config = cfg.Pinus.ponderosa, 
-                    climate = clim.Argentina, output = FALSE, python_indexing = FALSE)
 pipo.BC <- run_3pg(config = cfg.Pinus.ponderosa, 
                     climate = clim.BritishColumbia, output = FALSE, python_indexing = FALSE)
 pipo.NC <- run_3pg(config = cfg.Pinus.ponderosa, 
                     climate = clim.NorthCarolina, output = FALSE, python_indexing = FALSE)
+cfg.Pseudotsuga.menziesii$cfg.Pinus.ponderosa$lat <- -40
+pipo.AR <- run_3pg(config = cfg.Pinus.ponderosa, 
+                    climate = clim.Argentina, output = FALSE, python_indexing = FALSE)
 
 # Convert from D13C of cellulose to wood
   doug.OR$D13CTissue <- doug.OR$D13CTissue + 1.5
@@ -139,15 +141,15 @@ pipo.NC <- run_3pg(config = cfg.Pinus.ponderosa,
   pipo.NC$D13CTissue <- pipo.NC$D13CTissue + 1.5
   
 # Threshold
-  npp.threshold <- -22
-  doug.OR[doug.OR$D13CTissue > npp.threshold,] <- NA
-  doug.AR[doug.AR$D13CTissue > npp.threshold,] <- NA
-  doug.BC[doug.BC$D13CTissue > npp.threshold,] <- NA
-  doug.NC[doug.NC$D13CTissue > npp.threshold,] <- NA
-  pipo.OR[pipo.OR$D13CTissue > npp.threshold,] <- NA
-  pipo.AR[pipo.AR$D13CTissue > npp.threshold,] <- NA
-  pipo.BC[pipo.BC$D13CTissue > npp.threshold,] <- NA
-  pipo.NC[pipo.NC$D13CTissue > npp.threshold,] <- NA
+  npp.threshold <- 0.05
+  doug.OR[doug.OR$NPP < npp.threshold,] <- NA
+  doug.AR[doug.AR$NPP < npp.threshold,] <- NA
+  doug.BC[doug.BC$NPP < npp.threshold,] <- NA
+  doug.NC[doug.NC$NPP < npp.threshold,] <- NA
+  pipo.OR[pipo.OR$NPP < npp.threshold,] <- NA
+  pipo.AR[pipo.AR$NPP < npp.threshold,] <- NA
+  pipo.BC[pipo.BC$NPP < npp.threshold,] <- NA
+  pipo.NC[pipo.NC$NPP < npp.threshold,] <- NA
 ```
 
 ## Plot D13C by site and species
@@ -156,19 +158,19 @@ pipo.NC <- run_3pg(config = cfg.Pinus.ponderosa,
 
 par(mfrow = c(2,2), mar = c(2.5,4,3,1))
 
-  with(tail(doug.OR, 12), plot(D13CTissue ~ c(1:12), ylim = c(-32, -22), type = "l", xlab = "", main = "Western OR", xaxt = "n", col = "dodgerblue", ylab = expression(Wood ~{delta}^13*C~'\211')))
+  with(tail(doug.OR, 12), plot(D13CTissue ~ c(1:12), ylim = c(-32, -20), type = "l", xlab = "", main = "Western OR", xaxt = "n", col = "dodgerblue", ylab = expression(Wood ~{delta}^13*C~'\211')))
     with(tail(pipo.OR, 12), lines(y = D13CTissue, x = c(1:12), col = "darkorange"))    
     axis(side = 1, at = c(1:12), labels = month.abb, las = 2)
 
-  with(tail(doug.AR, 12), plot(D13CTissue ~ c(1:12), ylim = c(-32, -22), type = "l", xlab = "", main = "Argentina", xaxt = "n", col = "dodgerblue", ylab = expression(Wood ~{delta}^13*C~'\211')))
+  with(tail(doug.AR, 12), plot(D13CTissue ~ c(1:12), ylim = c(-32, -20), type = "l", xlab = "", main = "Argentina", xaxt = "n", col = "dodgerblue", ylab = expression(Wood ~{delta}^13*C~'\211')))
     with(tail(pipo.AR, 12), lines(y = D13CTissue, x = c(1:12), col = "darkorange"))    
     axis(side = 1, at = c(1:12), labels = month.abb, las = 2)
 
-  with(tail(doug.BC, 12), plot(D13CTissue ~ c(1:12), ylim = c(-32, -22), type = "l", xlab = "", main = "British Columbia", xaxt = "n", col = "dodgerblue", ylab = expression(Wood ~{delta}^13*C~'\211')))
+  with(tail(doug.BC, 12), plot(D13CTissue ~ c(1:12), ylim = c(-32, -20), type = "l", xlab = "", main = "British Columbia", xaxt = "n", col = "dodgerblue", ylab = expression(Wood ~{delta}^13*C~'\211')))
     with(tail(pipo.BC, 12), lines(y = D13CTissue, x = c(1:12), col = "darkorange"))    
     axis(side = 1, at = c(1:12), labels = month.abb, las = 2)
 
-  with(tail(doug.NC, 12), plot(D13CTissue ~ c(1:12), ylim = c(-32, -22), type = "l", xlab = "", main = "North Carolinas", xaxt = "n", col = "dodgerblue", ylab = expression(Wood ~{delta}^13*C~'\211')))
+  with(tail(doug.NC, 12), plot(D13CTissue ~ c(1:12), ylim = c(-32, -20), type = "l", xlab = "", main = "North Carolina", xaxt = "n", col = "dodgerblue", ylab = expression(Wood ~{delta}^13*C~'\211')))
     with(tail(pipo.NC, 12), lines(y = D13CTissue, x = c(1:12), col = "darkorange"))    
     axis(side = 1, at = c(1:12), labels = month.abb, las = 2)
           
