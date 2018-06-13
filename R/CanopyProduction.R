@@ -88,10 +88,21 @@ calc_physiological_modifier <- function(modifier_VPD, modifier_soilwater, modifi
     return(res)
 }
 
+###### python for trouble shoot
+# def calc_canopy_cover(stand_age, LAI, fullCanAge, canpower, k):
+#     # calc canopy cover and light interception.
+#     canopy_cover = 1.0
+#     if (fullCanAge > 0) and (stand_age < fullCanAge):
+#         canopy_cover = (stand_age / fullCanAge) ** canpower
+#     light_interception = (1 - (exp(-1 * k * LAI)))
+# 
+#     return canopy_cover, light_interception
+
+
 calc_canopy_cover <- function(stand_age, LAI, fullCanAge, canpower, k){
     # calc canopy cover and light interception.
     canopy_cover = 1.0
-    if(fullCanAge > 0 | stand_age < fullCanAge){
+    if(fullCanAge > 0 & stand_age < fullCanAge){
         canopy_cover = (stand_age / fullCanAge) ^ canpower
     }
     light_interception = (1 - (exp(-1 * k * LAI)))
